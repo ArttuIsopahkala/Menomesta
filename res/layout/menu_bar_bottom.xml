@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
+    android:visibility="visible">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/color_line" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@color/color_menu"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/cityText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:text="Seinäjoki"
+                android:textColor="@color/color_text_light"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:text="Keskiviikko yö"
+                android:textColor="@color/color_text_light"
+                android:textSize="14sp" />
+        </LinearLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="showInfo"
+            android:text="@string/icon_info"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="24sp" />
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="showProfile"
+            android:text="@string/icon_user"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="24sp" />
+        <RelativeLayout
+            android:id="@+id/companyMessageContent"
+            android:layout_width="53dp"
+            android:layout_height="53dp">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="openCompanyFragment"
+                android:text="@string/icon_company"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="22sp" />
+            <ImageView
+                android:id="@+id/usersLookingMark"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_margin="9dp"
+                android:src="@drawable/loader_ic"
+                android:visibility="invisible"/>
+            <ImageView
+                android:id="@+id/newMessageMark"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="11dp"
+                android:src="@drawable/circle_shape"
+                android:tint="@color/color_company_circle"
+                android:visibility="invisible"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/color_menu"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+</LinearLayout>

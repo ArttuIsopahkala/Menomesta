@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_main"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/menu_back"
+        layout="@layout/menu_back" />
+    <LinearLayout
+        android:id="@+id/menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/menu_back"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/removeChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_button"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/private_remove"
+                android:textColor="@color/color_text_light"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/icon_remove"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/addComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_menu"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/messageText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.8"
+            android:hint="@string/private_message_hint"
+            android:inputType="textCapSentences"
+            android:maxLength="500"
+            android:textColor="@color/color_text_light_secondary"
+            android:textColorHint="@color/color_text_hint" />
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/sendMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="13dp"
+            android:text="@string/icon_send"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="28sp" />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/messageList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/addComment"
+        android:layout_below="@+id/menu_container"
+        android:divider="@null"
+        android:stackFromBottom="true"
+        android:transcriptMode="normal">
+    </ListView>
+</RelativeLayout>

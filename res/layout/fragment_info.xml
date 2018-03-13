@@ -1,0 +1,239 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_main"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/menu_back"
+        layout="@layout/menu_back" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menu_back">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/adsOffContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/color_secondary"
+                android:padding="10dp">
+
+                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/karma_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/custom_button"
+                    android:text="@string/icon_question"
+                    app:iconFont="@string/icon_light"
+                    app:iconSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/karma_button"
+                    android:layout_toStartOf="@id/karma_button"
+                    android:text="@string/profile_ads_title"
+                    android:textColor="@color/color_text_light"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/color_secondary"
+                android:padding="10dp">
+
+                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/agreement_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/custom_button"
+                    android:text="@string/icon_question"
+                    app:iconFont="@string/icon_light"
+                    app:iconSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/agreement_button"
+                    android:layout_toStartOf="@id/agreement_button"
+                    android:text="@string/info_agreement_title"
+                    android:textColor="@color/color_text_light"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/color_secondary"
+                android:padding="10dp">
+
+                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/add_bar_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/custom_button"
+                    android:onClick="addBar"
+                    android:text="@string/icon_list_add"
+                    app:iconFont="@string/icon_solid"
+                    app:iconSize="24sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/add_bar_button"
+                    android:layout_toStartOf="@id/add_bar_button"
+                    android:text="@string/info_add_bar"
+                    android:textColor="@color/color_text_light"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/color_secondary"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/feedback_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_feedback_title"
+                    android:textColor="@color/color_text_light"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/feedback_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/feedback_title"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/info_feedback_content"
+                    android:textColor="@color/color_text_light" />
+                <EditText
+                    android:id="@+id/feedback_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/feedback_content"
+                    android:inputType="textCapSentences"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/color_text_light_secondary"/>
+                <Button
+                    android:id="@+id/feedback_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/feedback_text"
+                    android:background="@drawable/custom_button"
+                    android:text="@string/submit"
+                    android:textColor="@color/color_text_light" />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/color_menu"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/googleplay" />
+
+                <TextView
+                    android:id="@+id/rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/info_link_rate"
+                    android:textColor="@color/color_url_link"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/info_link_more"
+                    android:textColor="@color/color_url_link"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/color_menu"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/facebook_icon" />
+
+                <TextView
+                    android:id="@+id/facebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/info_link_like"
+                    android:textColor="@color/color_url_link"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/info_version"
+                    android:textColor="@color/color_text_light" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/info_copyright"
+                    android:textColor="@color/color_text_light" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

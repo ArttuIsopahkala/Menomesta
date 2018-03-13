@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorControlNormal">@color/color_text_light</item>
+        <item name="colorControlActivated">@color/color_text_light_secondary</item>
+        <item name="colorControlHighlight">@color/color_text_light_secondary</item>
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/mySpinnerText</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/color_text_light</item>
+        <item name="android:background">@color/color_secondary</item>
+    </style>
+    <style name="mySpinnerText" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/color_text_light</item>
+    </style>
+    <style name="CustomTabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/color_line</item>
+        <item name="tabIndicatorColor">@color/color_line</item>
+        <item name="tabTextAppearance">@style/CustomTabTexStyle</item>
+    </style>
+
+    <style name="CustomTabTexStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_text_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

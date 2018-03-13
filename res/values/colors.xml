@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="color_main" type="color">#0F0F0F</item>
+    <item name="color_menu" type="color">#1d1d1d</item>
+    <item name="color_button" type="color">#242424</item>
+    <item name="color_item_pressed" type="color">#242424</item>
+    <item name="color_text_light" type="color">#F4F4F4</item>
+    <item name="color_text_light_secondary" type="color">#FFD6D6D6</item>
+    <item name="color_text_light_third" type="color">#9e9e9e</item>
+    <item name="color_text_hint" type="color">#c88e8e8e</item>
+    <item name="color_secondary" type="color">#293136</item>
+    <item name="color_shadow" type="color">#333333</item>
+    <item name="color_text_black" type="color">#0d0d0d</item>
+    <item name="color_link" type="color">#FF1C77FF</item>
+    <item name="color_url_link" type="color">#05C5CF</item>
+    <item name="color_line" type="color">#ffa500</item>
+    <item name="color_star" type="color">#F6BA23</item>
+    <item name="color_male" type="color">#2948DE</item>
+    <item name="color_female" type="color">#D02AD5</item>
+    <item name="color_money" type="color">#4a9c2a</item>
+    <item name="color_marker" type="color">#DF3636</item>
+    <item name="color_company_circle" type="color">#ef180b</item>
+</resources>

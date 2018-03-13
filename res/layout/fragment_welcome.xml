@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_main"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/welcome_background_gradient"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="50dp"
+            android:src="@drawable/welcome_image"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleContainer"
+        android:background="@color/color_menu"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/welcome_desc_new"
+        android:textColor="@color/color_text_light"
+        android:textSize="17sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/saveButton"
+        android:layout_below="@+id/description"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_secondary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="15dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/profile_birthday"
+                android:textColor="@color/color_text_light"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.ardeapps.menomesta.views.BirthdayPicker
+                android:id="@+id/birthday_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sexContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/color_secondary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="15dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/profile_sex"
+                android:textColor="@color/color_text_light"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:orientation="vertical" >
+                <RadioButton
+                    android:id="@+id/radioMan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/male"
+                    android:textColor="@color/color_text_light_secondary" />
+                <RadioButton
+                    android:id="@+id/radioWoman"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/female"
+                    android:textColor="@color/color_text_light_secondary"/>
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@id/saveButton"
+        android:background="@color/color_line" />
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/custom_button"
+        android:text="@string/ready"
+        android:textColor="@color/color_text_light" />
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/color_menu"
+        android:orientation="horizontal">
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/arrow"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:onClick="goBack"
+            android:text="@string/icon_back"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="18sp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/arrow"
+            android:layout_toRightOf="@+id/arrow"
+            android:gravity="center_vertical"
+            android:text="@string/add_bar_title"
+            android:textColor="@color/color_text_light"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <View
+        android:id="@+id/menu_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/container"
+        android:background="@color/color_line" />
+</RelativeLayout>

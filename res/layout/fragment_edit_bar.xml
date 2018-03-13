@@ -1,0 +1,279 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_main"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/menu_back"
+        layout="@layout/menu_back" />
+    <LinearLayout
+        android:id="@+id/detailsListHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_back"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.64" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:text="@string/prices_updated"
+            android:textColor="@color/color_text_light"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ageContentFriday"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/detailsListHeader"
+        android:background="@color/color_secondary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48"
+            android:text="@string/bar_details_age_friday"
+            android:textColor="@color/color_text_light" />
+        <TextView
+            android:id="@+id/ageValueFriday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:textColor="@color/color_text_light"/>
+        <TextView
+            android:id="@+id/ageUpdatedFriday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:textColor="@color/color_text_light"/>
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/edit_icon_age_friday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12"
+            android:background="@drawable/selector"
+            android:text="@string/icon_edit"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="18sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ageContentSaturday"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/ageContentFriday"
+        android:background="@color/color_secondary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48"
+            android:text="@string/bar_details_age_saturday"
+            android:textColor="@color/color_text_light" />
+        <TextView
+            android:id="@+id/ageValueSaturday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:textColor="@color/color_text_light"/>
+        <TextView
+            android:id="@+id/ageUpdatedSaturday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:textColor="@color/color_text_light"/>
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/edit_icon_age_saturday"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12"
+            android:background="@drawable/selector"
+            android:text="@string/icon_edit"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="18sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/entranceContent"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/ageContentSaturday"
+        android:background="@color/color_secondary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48"
+            android:text="@string/entrance"
+            android:textColor="@color/color_text_light" />
+        <TextView
+            android:id="@+id/entranceValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:textColor="@color/color_text_light"/>
+        <TextView
+            android:id="@+id/entranceUpdated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:textColor="@color/color_text_light"/>
+
+        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/edit_icon_entrance"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12"
+            android:background="@drawable/selector"
+            android:text="@string/icon_edit"
+            app:iconFont="@string/icon_solid"
+            app:iconSize="18sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/foodContent"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/entranceContent"
+        android:background="@color/color_secondary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48"
+            android:text="@string/bar_details_food"
+            android:textColor="@color/color_text_light" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.41" />
+        <CheckBox
+            android:id="@+id/food_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.11"
+            android:gravity="center"
+            android:saveEnabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/listHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/foodContent"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.32"
+            android:text="@string/prices_name"
+            android:textColor="@color/color_text_light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:text="@string/prices_size"
+            android:textColor="@color/color_text_light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:text="@string/prices_price"
+            android:textColor="@color/color_text_light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:text="@string/prices_updated"
+            android:textColor="@color/color_text_light"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/addDrink"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_button"
+        android:gravity="center"
+        android:text="@string/prices_add"
+        android:textColor="@color/color_text_light"
+        android:textSize="16sp"
+        android:textStyle="bold">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/addDrink"
+        android:layout_below="@+id/listHeader"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/beerItem"
+            layout="@layout/drink_list_item" />
+
+        <include
+            android:id="@+id/longDrinkItem"
+            layout="@layout/drink_list_item" />
+
+        <ListView
+            android:id="@+id/drinkListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

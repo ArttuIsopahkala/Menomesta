@@ -1,0 +1,264 @@
+<resources>
+    <string name="app_name">Menomesta</string>
+
+    <string name="dd">pp</string>
+    <string name="mm">kk</string>
+    <string name="yyyy">vvvv</string>
+    <string name="ready">Valmis</string>
+    <string name="no_bars">Ole ensimmäinen ja lisää baareja tähän kaupunkiin alapalkista löytyvän info-painikkeen kautta niin hauskanpito voi alkaa!</string>
+    <string name="monday">Maanantai</string>
+    <string name="tuesday">Tiistai</string>
+    <string name="wednesday">Keskiviikko</string>
+    <string name="thursday">Torstai</string>
+    <string name="friday">Perjantai</string>
+    <string name="saturday">Lauantai</string>
+    <string name="sunday">Sunnuntai</string>
+    <string name="night">yö</string>
+    <string name="clock">kello</string>
+    <string name="today">Tänään</string>
+    <string name="january">tammikuuta</string>
+    <string name="february">halmikuuta</string>
+    <string name="march">maaliskuuta</string>
+    <string name="april">huhtikuuta</string>
+    <string name="may">toukokuuta</string>
+    <string name="june">kesäkuuta</string>
+    <string name="july">heinäkuuta</string>
+    <string name="august">elokuuta</string>
+    <string name="september">syyskuuta</string>
+    <string name="october">lokakuuta</string>
+    <string name="november">marraskuuta</string>
+    <string name="december">joulukuuta</string>
+    <string name="new_private_message">Uusi yksityisviesti henkilöltä</string>
+    <string name="new_event">Uusi tapahtuma kaupungissasi!</string>
+    <string name="new_message">Uusi viesti kaupunkiisi!</string>
+    <string name="new_reply">Joku vastasi kommenttiisi!</string>
+    <string name="private_me">Minä</string>
+    <string name="private_remove">Poista</string>
+    <string name="request1city">Pyyntösi käsiteltiin! Kaupunki</string>
+    <string name="request1bar">Pyyntösi käsiteltiin! Baari</string>
+    <string name="request2">on nyt lisätty.</string>
+    <string name="average_age">Keski-ikä</string>
+    <string name="private_message">Vastaanottaja</string>
+    <string name="private_message_hint">Kirjoita viesti</string>
+    <string name="male">Mies</string>
+    <string name="add">Lisää</string>
+    <string name="cancel">Peruuta</string>
+    <string name="female">Nainen</string>
+    <string name="name">Nimi</string>
+    <string name="add_city">Lisää kaupunki</string>
+    <string name="city">Kaupunki</string>
+    <string name="address">Lähiosoite</string>
+    <string name="type">Tyyppi</string>
+    <string name="company_and_private">Seuranhaku ja yksityisviestit (beta)</string>
+    <string name="bars">Baarit</string>
+    <string name="chat">Keskustelu</string>
+    <string name="events">Tapahtumat</string>
+    <string name="press_to_reply">Paina vastataksesi</string>
+
+    <string name="price">%1$s€</string>
+    <string name="size">%1$sL</string>
+    <string name="age">%1$sv</string>
+    <string name="percent">%1$s%%</string>
+
+    <string name="select_city_desc">Sijaintipalvelu ei ole päällä tai kaupunkiasi ei löytynyt vielä sovelluksesta. Valitse kaupunki manuaalisesti.</string>
+
+    <string name="beer_info_title">Seuranhaku</string>
+    <string name="beer_info_desc">Kirjoita lyhyt seuranhakuviesti. Millaista seuraa haet tai mitä haluat tehdä?</string>
+
+    <string name="welcome_info_title">Tervetuloa uusi menomestailija!</string>
+    <string name="welcome_info_desc">Sovellus perustuu lähes täysin käyttäjäkuntansa lisäämiin tietoihin ja jokaisella käyttäjällä on mahdollisuus muokata hintoja ja tietoja. Päivittämällä tietoja teet sovelluksesta entistä hyödyllisemmän myös muille. \n\nPainamalla \"OK\" hyväksyt seuraavat ehdot:\n- Olet yli 18 vuotias\n- Et lisää virheellistä tietoa tarkoituksella\n- Et käytä sovellusta kaupalliseen tarkoitukseen\n\nMikäli pidät sovelluksesta arvostele se ja kerro siitä kavereille! Meidät löytää myös Facebookista nimellä Menomesta.</string>
+    <string name="welcome_desc_old">Uusi versio vaatii syntymäaikasi kokonaisena.</string>
+    <string name="welcome_desc_new">Täydennä profiilisi, jotta löydät oikeat baarit sekä ihmiset läheltäsi! Voit muokata tietoja jälkeenpäin.</string>
+
+    <string name="session_started">Aloitettu</string>
+    <string name="profile_saved">Profiili päivitettiin!</string>
+    <string name="not_participated_title">Huomaa!</string>
+    <string name="no_votes">Ei vielä osallistujia</string>
+    <string name="vote_here">Osallistu tästä</string>
+    <string name="vote">osallistuja</string>
+    <string name="votes">osallistujaa</string>
+    <string name="add_bar_title">Lisää menomesta!</string>
+    <string name="add_bar_city_not_found">Etkö löydä kaupunkiasi? Lisää se tästä!</string>
+    <string name="bar_pub">Baari/Pubi</string>
+    <string name="nightclub">Yökerho</string>
+    <string name="submit">Lähetä!</string>
+    <string name="ok">OK</string>
+    <string name="map_no_location_title">Sijaintiasi ei löydy</string>
+    <string name="map_no_location_desc">Varmista että laitteesi sijaintitiedot ovat päällä ja olet sallinut sovelluksen käytää niitä.</string>
+    <string name="map_no_location_found_event">Tapahtuman sijaintia ei löytynyt.</string>
+    <string name="map_title">Kaupunkisi baarit</string>
+    <string name="map_show_closest">Näytä lähin baari</string>
+    <string name="submit_error_title">Pyyntöä ei lähetetty!</string>
+    <string name="submit_error_desc">Kaikki tiedot on täytettävä.</string>
+    <string name="submit_city_desc">Kiitos! Ylläpito tarkistaa vielä, että kaupunki on aito. Saat ilmoituksen puhelimeesi kun se on lisätty. Voit kuitenkin jo tallentaa sen profiiliisi.</string>
+    <string name="submit_success">Pyyntö lähetettiin!</string>
+    <string name="submit_success_desc">Kiitos! Ylläpito tarkistaa vielä baarin tiedot. Saat ilmoituksen puhelimeesi kun se on lisätty.</string>
+    <string name="add_bar_desc">Jos tuntemasi baari puuttuu sovelluksesta, voit lisätä sen tämän lomakkeen avulla. Huom! Ylläpito tarkistaa jokaisen baarin aitouden.</string>
+    <string name="profile_title">Profiili ja ilmoitukset</string>
+    <string name="profile">Profiili</string>
+    <string name="accept_notifications">Ilmoitukset</string>
+
+    <string name="confirmation_no">Ei</string>
+    <string name="confirmation_yes">Kyllä</string>
+    <string name="confirmation_chat">Haluatko varmasti poistaa tämän keskustelun? Viestit poistetaan, ettekä voi enää keskustella toisillenne.</string>
+    <string name="confirmation_report_comment">Sisältääkö kommentti mielestäsi vihapuhetta, kiusaamista, rasismia tai muuta roskapostia?</string>
+    <string name="confirmation_report_error_desc_comment">Olet jo ilmoittanut tästä kommentista.</string>
+    <string name="confirmation_report_event">Onko tapahtuma mielestäsi roskapostia tai sisältää täysin väärää tietoa?</string>
+    <string name="confirmation_report_error_desc_event">Olet jo ilmoittanut tästä tapahtumasta.</string>
+
+    <string name="company_no_company">Ei seuranhakijoita tällä hetkellä.</string>
+    <string name="company_chats_below">Alla näet jo aloittamasi yksityiset keskustelut.</string>
+    <string name="company_only_you">Olet tällä hetkellä ainoa seuranhakija.</string>
+    <string name="company_look">Hae seuraa</string>
+    <string name="company_look_no">Älä hae enää seuraa</string>
+
+    <string name="notifications_vibrate">Värinä</string>
+    <string name="notifications_private">Yksityisviestit</string>
+    <string name="notifications_reply">Vastaukset</string>
+    <string name="notifications_events">Uudet tapahtumat</string>
+    <string name="notifications_city">Kaupunkiviestit</string>
+    <string name="notifications_company">Seuranhakijat</string>
+    <string name="notification_title">Arvoisa menomestailija!</string>
+    <string name="notification_new_company">Uusia seuranhakijoita kaupungissasi!</string>
+
+    <string name="profile_karma">Aktiivisuuspisteet:</string>
+    <string name="profile_ads_title">Mainokset pois?</string>
+    <string name="profile_ads_desc">Saat mainokset pois keräämällä tarpeeksi Janoisten sankari -pisteitä. \n\nPisteitä saat aktiivisuutesi mukaan erilaisista toiminnoista. \n\nPalkitsemme aktiivisimmat %1$d%% mainosvapaalla sovelluksella.</string>
+    <string name="profile_birthday">Syntymäaika</string>
+    <string name="profile_sex">Sukupuoli</string>
+    <string name="profile_save">Tallenna</string>
+    <string name="profile_too_young">Sovellus on yli 18 vuotiaille.</string>
+
+    <string name="alert_profile_error_title">Profiilia ei tallennettu!</string>
+    <string name="alert_incorrect_value">Syntymäaika on virheellinen.</string>
+
+    <string name="comments_info">Keskustelua tässä kaupungissa ei ole vielä aloitettu. Kirjoita ensimmäinen kommentti plus-painikkeesta!</string>
+
+    <string name="chat_removed_title">Viestiä ei lähetetty!</string>
+    <string name="chat_removed_desc">Vastaanottaja on poistanut keskustelun.</string>
+
+    <string name="user_not_look_title">Keskustelua ei avattu!</string>
+    <string name="user_not_look_desc">Vastaanottaja ei etsi enää seuraa.</string>
+
+    <string name="info_title">Tietoa sovelluksesta</string>
+    <string name="info_agreement_title">Käyttöehdot</string>
+    <string name="info_feedback_sent">Palaute lähetettiin! Kiitos!</string>
+    <string name="info_add_bar">Lisää sovelluksesta puuttuva baari täältä!</string>
+    <string name="info_version">Versio:</string>
+    <string name="info_copyright">Copyright &#169; Arde Apps</string>
+    <string name="info_feedback_title">Palaute</string>
+    <string name="info_link_more">Lisää sovelluksia</string>
+    <string name="info_link_rate">Arvostele sovellus</string>
+    <string name="info_link_like">Tykkää Facebookissa</string>
+    <string name="info_premium_now">Olet nyt premium! Käynnistä sovellus uudelleen niin mainos häviää.</string>
+    <string name="info_feedback_content">Lähetä palautetta alla olevalla viestillä. Voit antaa palautetta sovelluksen toimivuudesta, haluamistasi uusista ominaisuuksista tai löydetyistä bugeista. Kirjoita perään sähköpostiosoitteesi, jos haluat vastauksen.</string>
+
+    <string name="filter_map">Kartalla</string>
+
+    <string name="statistics_title">Tilastot</string>
+
+    <string name="most_rated">Eniten tähtiä saaneet</string>
+    <string name="most_participated">Eniten osallistumisia</string>
+
+    <string name="stats_all_time">Kaikki ajankohdat</string>
+    <string name="stats_this_week">Tämä viikko</string>
+    <string name="stats_filter">Suodatin</string>
+    <string name="stats_prices">Hinnat</string>
+    <string name="stats_cheapest_beer">Halvin olut</string>
+    <string name="stats_cheapest_long">Halvin lonkero</string>
+    <string name="stats_filter_all">Kaikki</string>
+    <string name="stats_filter_bars">Baarit ja pubit</string>
+    <string name="stats_filter_nightclubs">Yökerhot</string>
+
+    <string name="most_popular_nightclub">Suosituin yökerho</string>
+    <string name="most_popular_pub">Suosituin baari/pubi</string>
+
+    <string name="bar_details_position">%1$d. suosituin menomesta</string>
+    <string name="bar_details_statistics">Historia</string>
+    <string name="bar_details_map">Katso kartalla</string>
+    <string name="bar_details_edit">Muokkaa</string>
+    <string name="bar_details_comment_bar">Kommentoi</string>
+    <string name="bar_details_rate_bar">Anna tähtiä</string>
+    <string name="bar_details_rate">Arvostele</string>
+    <string name="bar_details_comment">Kommentit</string>
+    <string name="bar_details_prices">Hinnasto</string>
+    <string name="bar_details_age">Ikäraja:</string>
+    <string name="bar_details_age_no_added">Ikäraja: Ei lisätty</string>
+    <string name="bar_details_age_friday">Ikäraja perjantaisin</string>
+    <string name="bar_details_age_saturday">Ikäraja lauantaisin</string>
+    <string name="bar_details_age_pe">pe</string>
+    <string name="bar_details_age_la">la</string>
+    <string name="bar_details_entrance">Sisäänpääsymaksu:</string>
+    <string name="bar_details_jacket">narikka</string>
+    <string name="bar_details_error_title">Tietoja ei tallennettu!</string>
+    <string name="bar_details_error_desc">Kentässä on virheellinen arvo.</string>
+    <string name="bar_details_no_added">Ei lisätty</string>
+    <string name="bar_details_no_added_drinks">Lisää hintoja \"Muokkaa\" sivulla.</string>
+    <string name="bar_details_food">Täältä saa myös ruokaa</string>
+
+    <string name="entrance">Sisäänpääsymaksu</string>
+
+    <string name="prices_jacket">Narikka kuuluu hintaan</string>
+    <string name="prices_name">Juoma</string>
+    <string name="prices_size">Koko</string>
+    <string name="prices_price">Hinta</string>
+    <string name="prices_updated">Päivitetty</string>
+    <string name="prices_edit">Muokkaa juomaa</string>
+    <string name="prices_beer">Olut</string>
+    <string name="prices_long">Lonkero</string>
+    <string name="prices_add">Lisää juoma</string>
+    <string name="prices_error_title">Juomaa ei tallennettu!</string>
+    <string name="prices_error_size">Juoman koko on virheellinen.</string>
+    <string name="prices_error_price">Hinta on virheellinen.</string>
+    <string name="prices_error_name">Anna juoman nimi.</string>
+    <string name="prices_error_exists">Tällä nimellä löytyy jo juoma. Voit päivittää sen tiedot painamalla juomaa.</string>
+
+    <string name="error_rating_title">Arvostelua ei annettu!</string>
+    <string name="error_rating_desc">Voit arvostella menomestan vain kerran päivässä.</string>
+    <string name="error_comment_title">Kommenttia ei lähetetty!</string>
+    <string name="error_comment_desc">Spämmin estämiseksi odota hetki ennen kuin lähetät uuden kommentin.</string>
+
+    <string name="error_network">Ei internet-yhteyttä!</string>
+    <string name="error_network_waiting">Odotetaan internet-yhteyttä!</string>
+    <string name="error_database">Ei yhteyttä tietokantaan!</string>
+    <string name="error_data_not_found">Dataa ei löytynyt!</string>
+    <string name="error_profile">Profiilia ei löydetty!</string>
+    <string name="error_service_action">Tapahtui virhe! Toimintaa ei tallennettu!</string>
+
+    <string name="filter_today">Tämän päivän toiminta</string>
+    <string name="filter_alphabetic">Aakkosjärjestys A-Ä</string>
+    <string name="filter_alphabetic_reverse">Aakkosjärjestys Ä-A</string>
+    <string name="filter_distance">Välimatka</string>
+    <string name="filter_female">Eniten naisia</string>
+    <string name="filter_male">Eniten miehiä</string>
+    <string name="filter_stars">Eniten tähtiä</string>
+    <string name="filter_participate">Eniten osallistumisia</string>
+    <string name="filter_distance_not_found">Sijaintiasi ei löytynyt!</string>
+
+    <string name="events_price">Pääsymaksu (€)</string>
+    <string name="events_free">Ilmainen</string>
+    <string name="events_edit">Muokkaa tapahtumaa</string>
+    <string name="events_add">Lisää tapahtuma</string>
+    <string name="events_add_name">Tapahtuman nimi</string>
+    <string name="events_add_place">Sijainti</string>
+    <string name="events_add_place_placeholder">Baarin nimi tai osoite</string>
+    <string name="events_add_time">Päivämäärä ja aika</string>
+    <string name="events_add_price_placeholder">Jätä tyhjäksi jos ilmainen</string>
+    <string name="events_add_description">Kuvaus</string>
+    <string name="events_add_description_placeholder">Kerro lisää tapahtumasta</string>
+    <string name="events_add_error_title">Tapahtumaa ei lisätty!</string>
+    <string name="events_add_error_desc_empty">Tapahtuman nimi ja sijainti ovat pakollisia tietoja.</string>
+    <string name="events_add_error_desc_time">Tapahtuman aika ei voi olla menneisyydessä.</string>
+    <string name="events_coming">Tapahtuma tulossa</string>
+    <string name="events_confirm_remove">Haluatko varmasti poistaa tämän tapahtuman?</string>
+    <string name="no_events">Ei tulevia tapahtumia tällä hetkellä.</string>
+
+    <string name="log_register_success">Rekisteröinti onnistui. E-mail: %1$s Password: %2$s</string>
+    <string name="log_login_success_token_created">Tunnistautuminen onnistui. Token luotiin uudelleen. userId: %1$s</string>
+    <string name="log_login_success_token_valid">Tunnistautuminen onnistui. Token valid. userId: %1$s</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-2033708472283724/4990692570</string>
+
+    <string name="icon_light">fa-regular.ttf</string>
+    <string name="icon_solid">fa-solid.ttf</string>
+</resources>

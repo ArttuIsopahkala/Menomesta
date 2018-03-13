@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/curve_shape"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entrance"
+        android:textColor="@color/color_text_light"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/valueText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:inputType="number"
+        android:maxLength="150"
+        android:textColor="@color/color_text_light_secondary" />
+    <CheckBox
+        android:id="@+id/jacketCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/valueText"
+        android:layout_marginTop="10dp"
+        android:text="@string/prices_jacket"
+        android:textColor="@color/color_text_light"
+        android:visibility="gone"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jacketCheckBox"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_button"
+            android:text="@string/cancel"
+            android:textColor="@color/color_text_light" />
+        <Button
+            android:id="@+id/btn_ready"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/custom_button"
+            android:text="@string/ready"
+            android:textColor="@color/color_text_light"/>
+    </RelativeLayout>
+</RelativeLayout>

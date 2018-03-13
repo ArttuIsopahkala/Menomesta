@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:weightSum="1">
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.7"
+        android:minHeight="90dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/bar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Passion Food ja Bar"
+            android:textColor="@color/color_text_light"
+            android:textSize="25sp"/>
+        <LinearLayout
+            android:id="@+id/detailsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bar_name"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/bar_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yökerho"
+                android:textColor="@color/color_text_light" />
+            <LinearLayout
+                android:id="@+id/distanceContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/circle_shape" />
+
+                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:alpha="0.8"
+                    android:text="@string/icon_marker"
+                    app:iconColor="@color/color_marker"
+                    app:iconFont="@string/icon_solid" />
+                <TextView
+                    android:id="@+id/distanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.5km"
+                    android:textColor="@color/color_text_light" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/foodContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/circle_shape" />
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.9"
+                    android:src="@drawable/food_icon" />
+            </LinearLayout>
+        </LinearLayout>
+        <RatingBar
+            android:id="@+id/rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detailsContainer"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressTint="@color/color_star"
+            android:secondaryProgressTint="@android:color/transparent"
+            android:stepSize="0.01" />
+        <LinearLayout
+            android:id="@+id/beerContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rating"
+            android:orientation="horizontal">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/icon_money"
+                app:iconColor="@color/color_money"
+                app:iconFont="@string/icon_light"
+                app:iconSize="12sp" />
+            <TextView
+                android:id="@+id/beerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Olut 3.5e"
+                android:textColor="@color/color_text_light" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/longContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/beerContent"
+            android:orientation="horizontal">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/icon_money"
+                app:iconColor="@color/color_money"
+                app:iconFont="@string/icon_light"
+                app:iconSize="12sp" />
+            <TextView
+                android:id="@+id/longText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lonkero 5e"
+                android:textColor="@color/color_text_light" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/popularContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/longContent"
+            android:orientation="horizontal">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/icon_trophy"
+                app:iconColor="@color/color_star"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="12sp" />
+            <TextView
+                android:id="@+id/most_popular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Suosituin"
+                android:textColor="@color/color_text_light" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/starsContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/popularContent"
+            android:orientation="horizontal">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/icon_trophy"
+                app:iconColor="@color/color_star"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="12sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eniten tähtiä"
+                android:textColor="@color/color_text_light" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/eventContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/starsContent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/stop_writing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:alpha="0.8"
+                android:text="@string/icon_calendar"
+                app:iconFont="@string/icon_light"
+                app:iconSize="14sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/eventNameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Touhutorstai"
+                    android:textColor="@color/color_text_light_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/eventTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Keskiviikkona kello 22.00"
+                    android:textColor="@color/color_text_light_third"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/votesContent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.3"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/femaleBar"
+                android:layout_width="15dp"
+                android:layout_height="5dp"
+                android:background="@color/color_female" />
+
+            <TextView
+                android:id="@+id/femalePercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="3dp"
+                android:text="70%"
+                android:textColor="@color/color_text_light"
+                android:textSize="12sp" />
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_user"
+                app:iconColor="@color/color_female"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/maleBar"
+                android:layout_width="15dp"
+                android:layout_height="5dp"
+                android:background="@color/color_male"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/malePercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="3dp"
+                android:text="70%"
+                android:textColor="@color/color_text_light"
+                android:textSize="12sp" />
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_user"
+                app:iconColor="@color/color_male"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/joinContent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/joinButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/plus_icon" />
+
+        <TextView
+            android:id="@+id/participate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/joinButton"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:text="@string/no_votes"
+            android:textColor="@color/color_text_light"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+</LinearLayout>
