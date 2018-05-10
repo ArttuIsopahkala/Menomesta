@@ -1,7 +1,7 @@
 package com.ardeapps.menomesta.resources;
 
 import com.ardeapps.menomesta.handlers.GetCityNamesHandler;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class CityNamesResource extends FirebaseService {
+public class CityNamesResource extends FirebaseDatabaseService {
     private static CityNamesResource instance;
     private static DatabaseReference database;
 

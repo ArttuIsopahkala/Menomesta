@@ -18,7 +18,7 @@ import com.ardeapps.menomesta.views.IconView;
 
 import java.util.ArrayList;
 
-import static com.ardeapps.menomesta.services.FirebaseService.messageLimit;
+import static com.ardeapps.menomesta.services.FirebaseDatabaseService.messageLimit;
 
 /**
  * Created by Arttu on 15.9.2016.
@@ -74,7 +74,7 @@ public class PrivateListAdapter extends BaseAdapter {
     public View getView(final int position, View cv, ViewGroup parent) {
         final Holder holder = new Holder();
         if (cv == null) {
-            cv = inflater.inflate(R.layout.private_message_list_item, null);
+            cv = inflater.inflate(R.layout.list_item_private_message, null);
         }
 
         holder.ageText = (TextView) cv.findViewById(R.id.ageText);

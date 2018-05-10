@@ -15,22 +15,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.adapters.BarListAdapter;
 import com.ardeapps.menomesta.adapters.FilterSpinnerAdapter;
 import com.ardeapps.menomesta.handlers.AddSuccessListener;
-import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetBarListDataHandler;
 import com.ardeapps.menomesta.handlers.GetVoteStatsHandler;
 import com.ardeapps.menomesta.objects.Bar;
-import com.ardeapps.menomesta.objects.Drink;
 import com.ardeapps.menomesta.objects.Event;
+import com.ardeapps.menomesta.objects.EventVote;
 import com.ardeapps.menomesta.objects.KarmaPoints;
-import com.ardeapps.menomesta.objects.Rating;
 import com.ardeapps.menomesta.objects.RatingStat;
 import com.ardeapps.menomesta.objects.Vote;
 import com.ardeapps.menomesta.objects.VoteStat;
-import com.ardeapps.menomesta.resources.EventsResource;
+import com.ardeapps.menomesta.resources.EventVotesResource;
 import com.ardeapps.menomesta.resources.UsersResource;
 import com.ardeapps.menomesta.resources.VoteStatsResource;
 import com.ardeapps.menomesta.resources.VotesLogResource;
@@ -56,6 +55,7 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
     SwipeRefreshLayout swipeRefresh;
     BarListAdapter adapter;
     ArrayList<Bar> bars;
+    Map<String, Bar> barsMap = new HashMap<>();
     Map<String, ArrayList<Vote>> votes;
     Map<String, String> userVotes;
     Map<String, VoteStat> allTimeVoteStats = new HashMap<>();
@@ -79,8 +79,37 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
         } else {
             no_bars.setVisibility(View.GONE);
             menuButtons.setVisibility(View.VISIBLE);
-            if (spinnerAdapter != null) {
-                sortBars(spinnerAdapter.getSelectedIndex());
+
+            int filterPosition = spinnerAdapter.getSelectedIndex();
+            switch (filterPosition) {
+                case 0:
+                    Collections.sort(bars, new sortToday());
+                    break;
+                case 1:
+                    Collections.sort(bars, new sortName());
+                    break;
+                case 2:
+                    Collections.sort(bars, new sortName());
+                    Collections.reverse(bars);
+                    break;
+                case 3:
+                    if (location != null)
+                        Collections.sort(bars, new sortDistance());
+                    else
+                        Logger.toast(R.string.filter_distance_not_found);
+                    break;
+                case 4:
+                    Collections.sort(bars, new sortStars());
+                    break;
+                case 5:
+                    Collections.sort(bars, new sortParticipate());
+                    break;
+                case 6:
+                    Collections.sort(bars, new sortFemale());
+                    break;
+                case 7:
+                    Collections.sort(bars, new sortMale());
+                    break;
             }
 
             ArrayList<VoteStat> voteStats = new ArrayList<>(allTimeVoteStats.values());
@@ -115,6 +144,7 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
         }
 
         adapter.refreshData();
+        adapter.setBars(bars);
         adapter.setTopBars(most_popular_bar_id, most_rated_bar_id, most_popular_nightclub_id);
         adapter.notifyDataSetChanged();
     }
@@ -122,11 +152,12 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
     public void refreshData() {
         appRes = (AppRes) AppRes.getContext();
         bars = new ArrayList<>(appRes.getBars().values());
+        barsMap = appRes.getBars();
         votes = appRes.getVotes();
         userVotes = appRes.getUserVotes();
         allTimeVoteStats = appRes.getAllTimeVoteStats();
         allTimeRatingStats = appRes.getAllTimeRatingStats();
-        events = appRes.getEvents();
+        events = FbRes.getEvents();
         location = appRes.getLocation();
     }
 
@@ -172,16 +203,15 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
                 }
 
                 spinnerAdapter.setSelection(position);
-                sortBars(position);
+                //sortBars(position);
                 barList.post(new Runnable() {
                     @Override
                     public void run() {
                         barList.smoothScrollToPosition(0);
                     }
                 });
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
+
+                update();
             }
 
             @Override
@@ -202,17 +232,7 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
                 swipeRefresh.setRefreshing(false);
                 Helper.getBarListData(new GetBarListDataHandler() {
                     @Override
-                    public void onBarListDataLoaded(Map<String, Bar> bars, Map<String, ArrayList<Vote>> votes, Map<String, String> userVotes,
-                                                    Map<String, ArrayList<Rating>> ratings, Map<String, String> userRatings, Map<String, VoteStat> allTimeVoteStats,
-                                                    Map<String, RatingStat> allTimeRatingStats, ArrayList<Drink> drinks) {
-                        appRes.setBarsAndBarNames(bars);
-                        appRes.setVotes(votes);
-                        appRes.setUserVotes(userVotes);
-                        appRes.setRatings(ratings);
-                        appRes.setUserRatings(userRatings);
-                        appRes.setAllTimeVoteStats(allTimeVoteStats);
-                        appRes.setAllTimeRatingStats(allTimeRatingStats);
-                        appRes.setDrinks(drinks);
+                    public void onBarListDataLoaded() {
                         refreshData();
                         update();
                     }
@@ -226,82 +246,58 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
 
     @Override
     public void onAddVoteClick(final Bar bar) {
-        final String barId = bar.barId;
-        final Vote vote = new Vote();
-        vote.barId = barId;
-        vote.time = System.currentTimeMillis();
-        vote.userId = AppRes.getUser().userId;
-        vote.user = AppRes.getUser();
-        VotesResource.getInstance().addVote(barId, vote, new AddSuccessListener() {
-            @Override
-            public void onAddSuccess(String id) {
-                vote.voteId = id;
-                appRes.setVote(barId, vote.voteId, vote);
-                VoteStatsResource.getInstance().editVoteStats(barId, new GetVoteStatsHandler() {
-                    @Override
-                    public void onVoteStatsLoaded(Map<String, VoteStat> allTimeVoteStats) {
-                        appRes.setAllTimeVoteStats(allTimeVoteStats);
-                        // Lisätään myös tapahtumaan vote, jos tapahtuma on tänään
-                        Event event = Helper.getEventByName(events, bar.name);
-                        if (event != null && DateUtil.isToday(event.startTime)) {
-                            final Event eventToSave = event.clone();
-                            eventToSave.usersJoined.add(AppRes.getUser().userId);
-                            EventsResource.getInstance().editEvent(eventToSave, new EditSuccessListener() {
-                                @Override
-                                public void onEditSuccess() {
-                                    appRes.setEvent(eventToSave.eventId, eventToSave);
-                                    refreshData();
-                                    update();
-                                    FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshEventsFragment();
-                                }
-                            });
-                        } else {
-                            refreshData();
-                            update();
-                        }
+        // Jos tapahtuma on tänään, lisätään tapahtumavote
+        final Event event = Helper.getEventByBarId(events, bar.barId);
+        if(event != null && DateUtil.isToday(event.startTime)) {
+            final EventVote eventVote = new EventVote();
+            eventVote.eventId = event.eventId;
+            eventVote.barId = event.barId;
+            eventVote.userId = AppRes.getUser().userId;
+            eventVote.time = System.currentTimeMillis();
+            eventVote.eventEndTime = event.endTime;
+            eventVote.user = AppRes.getUser();
 
-                        VotesLogResource.getInstance().addVoteLog(barId, vote);
-                        UsersResource.getInstance().updateUserKarma(KarmaPoints.VOTED, true);
-                    }
-                });
+            EventVotesResource.getInstance().addEventVote(event.eventId, eventVote, new AddSuccessListener() {
+                @Override
+                public void onAddSuccess(String id) {
+                    eventVote.voteId = id;
+                    appRes.setEventVote(event.eventId, eventVote.voteId, eventVote);
 
-            }
-        });
+                    Vote vote = new Vote(eventVote);
+                    onVoteAdded(vote);
+                }
+            });
+        } else {
+            final String barId = bar.barId;
+            final Vote vote = new Vote();
+            vote.barId = barId;
+            vote.time = System.currentTimeMillis();
+            vote.userId = AppRes.getUser().userId;
+            vote.user = AppRes.getUser();
+            VotesResource.getInstance().addVote(barId, vote, new AddSuccessListener() {
+                @Override
+                public void onAddSuccess(String id) {
+                    vote.voteId = id;
+                    appRes.setVote(barId, vote.voteId, vote);
+
+                    onVoteAdded(vote);
+                }
+            });
+        }
     }
 
-    private void sortBars(int position) {
-        if (bars != null) {
-            switch (position) {
-                case 0:
-                    Collections.sort(bars, new sortToday());
-                    break;
-                case 1:
-                    Collections.sort(bars, new sortName());
-                    break;
-                case 2:
-                    Collections.sort(bars, new sortName());
-                    Collections.reverse(bars);
-                    break;
-                case 3:
-                    if (location != null && location.getLatitude() > 0 && location.getLongitude() > 0)
-                        Collections.sort(bars, new sortDistance());
-                    else
-                        Logger.toast(R.string.filter_distance_not_found);
-                    break;
-                case 4:
-                    Collections.sort(bars, new sortStars());
-                    break;
-                case 5:
-                    Collections.sort(bars, new sortParticipate());
-                    break;
-                case 6:
-                    Collections.sort(bars, new sortFemale());
-                    break;
-                case 7:
-                    Collections.sort(bars, new sortMale());
-                    break;
+    private void onVoteAdded(final Vote vote) {
+        VoteStatsResource.getInstance().editVoteStat(vote.barId, new GetVoteStatsHandler() {
+            @Override
+            public void onVoteStatsLoaded(Map<String, VoteStat> allTimeVoteStats) {
+                appRes.setAllTimeVoteStats(allTimeVoteStats);
+                refreshData();
+                update();
+
+                VotesLogResource.getInstance().addVoteLog(vote.barId, vote);
+                UsersResource.getInstance().updateUserKarma(KarmaPoints.VOTED, true);
             }
-        }
+        });
     }
 
     private int compareBars(Bar obj1, Bar obj2) {
@@ -313,16 +309,15 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
 
         for (Event event : events) {
             if (DateUtil.isToday(event.startTime)) {
-                if (event.address.equals(obj1.name)) {
+                Bar bar = barsMap.get(event.barId);
+                if (bar.barId.equals(obj1.barId)) {
                     obj1Event = true;
-                    if (event.usersJoined != null)
-                        obj1Votes = event.usersJoined.size();
+                    obj1Votes = event.attendingCount;
                 }
 
-                if (event.address.equals(obj2.name)) {
+                if (bar.barId.equals(obj2.barId)) {
                     obj2Event = true;
-                    if (event.usersJoined != null)
-                        obj2Votes = event.usersJoined.size();
+                    obj2Votes = event.attendingCount;
                 }
             }
 
@@ -330,11 +325,11 @@ public class BarsFragment extends Fragment implements BarListAdapter.BarListAdap
                 break;
         }
 
-        if (votes.get(obj1.name) != null) {
-            obj1Votes += votes.get(obj1.name).size();
+        if (votes.get(obj1.barId) != null) {
+            obj1Votes += votes.get(obj1.barId).size();
         }
-        if (votes.get(obj2.name) != null) {
-            obj2Votes += votes.get(obj2.name).size();
+        if (votes.get(obj2.barId) != null) {
+            obj2Votes += votes.get(obj2.barId).size();
         }
 
         if (obj1Votes > obj2Votes) {

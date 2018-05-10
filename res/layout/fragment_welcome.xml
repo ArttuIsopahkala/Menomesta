@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:background="@color/color_main"
     android:clickable="true"
     android:focusable="true"
@@ -30,15 +31,31 @@
         android:padding="15dp"
         android:text="@string/welcome_desc_new"
         android:textColor="@color/color_text_light"
-        android:textSize="17sp" />
+        android:textSize="15sp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/saveButton"
         android:layout_below="@+id/description"
-        android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:weightSum="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_secondary"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/loginButton"
+                android:layout_gravity="center"
+                android:text="@string/facebook_login"
+                android:textColor="@color/color_text_light"
+                android:background="@drawable/facebook_button"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +73,7 @@
                 android:textStyle="bold" />
 
             <com.ardeapps.menomesta.views.BirthdayPicker
-                android:id="@+id/birthday_picker"
+                android:id="@+id/birthdayPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7" />

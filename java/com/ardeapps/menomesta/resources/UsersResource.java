@@ -5,7 +5,7 @@ import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetUserHandler;
 import com.ardeapps.menomesta.handlers.GetUsersMapHandler;
 import com.ardeapps.menomesta.objects.User;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class UsersResource extends FirebaseService {
+public class UsersResource extends FirebaseDatabaseService {
     private static UsersResource instance;
     private static DatabaseReference database;
 
@@ -97,7 +97,9 @@ public class UsersResource extends FirebaseService {
         });
     }
 
+    private int usersFetched = 0;
     public void getUsers(final ArrayList<String> userIds, final GetUsersMapHandler handler) {
+        usersFetched = 0;
         final Map<String, User> users = new HashMap<>();
         for (String userId : userIds) {
             getData(database.child(userId), new GetDataSuccessListener() {
@@ -106,9 +108,9 @@ public class UsersResource extends FirebaseService {
                     User user = dataSnapshot.getValue(User.class);
                     if (user != null) {
                         users.put(user.userId, user);
-                        if (users.size() == userIds.size()) {
-                            handler.onUsersMapLoaded(users);
-                        }
+                    }
+                    if(++usersFetched == userIds.size()) {
+                        handler.onUsersMapLoaded(users);
                     }
                 }
             });

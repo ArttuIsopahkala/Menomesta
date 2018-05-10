@@ -1,48 +1,51 @@
 package com.ardeapps.menomesta.objects;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.Map;
 
 /**
- * Created by Arttu on 15.9.2016.
+ * Created by Arttu on 15.9.2016. Tätä ei tallenneta tietokantaan.
  */
 public class Event {
+    public String barId;
     public String eventId;
-    public String userId;
     public String name;
-    public String address;
     public String description;
     public long startTime;
-    public int price;
-    public List<String> usersReported;
-    public List<String> usersJoined;
-
-    public Event() {
-        // Default constructor required for calls to DataSnapshot.getValue(Event.class)
-    }
+    public long endTime;
+    public int attendingCount;
 
     @Exclude
     public Event clone() {
         Event clone = new Event();
+        clone.barId = this.barId;
         clone.eventId = this.eventId;
-        clone.userId = this.userId;
         clone.name = this.name;
-        clone.address = this.address;
         clone.description = this.description;
-        clone.price = this.price;
         clone.startTime = this.startTime;
-        if (this.usersReported == null) {
-            clone.usersReported = new ArrayList<>();
-        } else {
-            clone.usersReported = this.usersReported;
-        }
-        if (this.usersJoined == null) {
-            clone.usersJoined = new ArrayList<>();
-        } else {
-            clone.usersJoined = this.usersJoined;
-        }
+        clone.endTime = this.endTime;
+        clone.attendingCount = this.attendingCount;
         return clone;
     }
+
+    @Exclude
+    public static ArrayList<Event> convertToArrayList(Map<String, ArrayList<Event>> eventsMap) {
+        ArrayList<Event> events = new ArrayList<>();
+        for (Map.Entry<String, ArrayList<Event>> entry : eventsMap.entrySet()) {
+            events.addAll(entry.getValue());
+        }
+        return events;
+    }
+
+    @Exclude
+    public static Comparator<Event> customEventComparator = new Comparator<Event>() {
+        @Override
+        public int compare(final Event entry1, final Event entry2) {
+            return entry1.startTime < entry2.startTime ? -1 : 1;
+        }
+    };
 }

@@ -3,6 +3,7 @@ package com.ardeapps.menomesta.utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Arttu on 6.5.2017.
@@ -28,6 +29,18 @@ public class DateUtil {
         return cal;
     }
 
+    public static long getMillisFromUTCString(String time) {
+        if(!StringUtils.isEmptyString(time)) {
+            String[] dateArray = time.split("T")[0].split("-");
+            String[] timeArray = time.split("T")[1].split(":");
+            Calendar c = Calendar.getInstance();
+            c.set(Integer.valueOf(dateArray[0]), (Integer.valueOf(dateArray[1]) - 1), Integer.valueOf(dateArray[2]), Integer.valueOf(timeArray[0]), Integer.valueOf(timeArray[1]));
+            return c.getTimeInMillis();
+        } else {
+            return 0;
+        }
+    }
+
     public static boolean isOnThisWeek(long milliseconds) {
         Calendar c = Calendar.getInstance();
         c.setFirstDayOfWeek(Calendar.MONDAY);
@@ -41,18 +54,25 @@ public class DateUtil {
 
         Date monday = c.getTime();
 
-        Date nextMonday = new Date(monday.getTime() + 7 * 24 * 60 * 60 * 1000);
+        Date nextMonday = new Date(monday.getTime() + TimeUnit.DAYS.toMillis(7));
 
         Date reference = new Date(milliseconds);
 
         return reference.after(monday) && reference.before(nextMonday);
     }
 
+    public static boolean isAfterSixAfternoon(long milliseconds) {
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(milliseconds);
+        return cal.get(Calendar.HOUR_OF_DAY) > 18;
+    }
+
+
     public static boolean isAfterToday(long milliseconds) {
         Calendar cal = new GregorianCalendar();
         // reset hour, minutes, seconds and millis
         if (cal.get(Calendar.HOUR_OF_DAY) < 6) {
-            cal.set(Calendar.DATE, cal.get(Calendar.DATE) - 1);
+            cal.add(Calendar.DATE, -1);
         }
         cal.set(Calendar.HOUR_OF_DAY, 6);
         cal.set(Calendar.MINUTE, 0);
@@ -60,17 +80,34 @@ public class DateUtil {
         cal.set(Calendar.MILLISECOND, 0);
 
         Date start = cal.getTime();
-        Date end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+        Date end = new Date(start.getTime() + TimeUnit.DAYS.toMillis(1));
         Date reference = new Date(milliseconds);
 
         return reference.after(end);
+    }
+
+    public static boolean isDateTomorrow(long milliseconds) {
+        Calendar cal = new GregorianCalendar();
+        // reset hour, minutes, seconds and millis
+        cal.add(Calendar.DATE, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date start = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        Date end = cal.getTime();
+        Date reference = new Date(milliseconds);
+
+        return reference.after(start) && reference.before(end);
     }
 
     public static boolean isToday(long milliseconds) {
         Calendar cal = new GregorianCalendar();
         // reset hour, minutes, seconds and millis
         if (cal.get(Calendar.HOUR_OF_DAY) < 6) {
-            cal.set(Calendar.DATE, cal.get(Calendar.DATE) - 1);
+            cal.add(Calendar.DATE, -1);
         }
         cal.set(Calendar.HOUR_OF_DAY, 6);
         cal.set(Calendar.MINUTE, 0);
@@ -78,7 +115,7 @@ public class DateUtil {
         cal.set(Calendar.MILLISECOND, 0);
 
         Date start = cal.getTime();
-        Date end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+        Date end = new Date(start.getTime() + TimeUnit.DAYS.toMillis(1));
         Date reference = new Date(milliseconds);
 
         return reference.after(start) && reference.before(end);
@@ -88,7 +125,7 @@ public class DateUtil {
         Calendar date = new GregorianCalendar();
         // reset hour, minutes, seconds and millis
         if (date.get(Calendar.HOUR_OF_DAY) < 6) {
-            date.set(Calendar.DATE, date.get(Calendar.DATE) - 1);
+            date.add(Calendar.DATE, -1);
         }
         date.set(Calendar.HOUR_OF_DAY, 6);
         date.set(Calendar.MINUTE, 0);

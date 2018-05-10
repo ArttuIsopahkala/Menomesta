@@ -70,7 +70,7 @@ public class ChatFragment extends Fragment implements ChatListAdapter.ChatListAd
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
         chatList = (ListView) v.findViewById(R.id.chatList);
-        addComment = (ImageView) v.findViewById(R.id.addComment);
+        addComment = (ImageView) v.findViewById(R.id.showBarInfo);
         no_comments = (TextView) v.findViewById(R.id.no_comments);
 
         chatList.setAdapter(adapter);

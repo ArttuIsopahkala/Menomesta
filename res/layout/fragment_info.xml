@@ -23,9 +23,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:background="@color/color_secondary"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="gone">
 
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/karma_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,7 +57,8 @@
                 android:background="@color/color_secondary"
                 android:padding="10dp">
 
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/agreement_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -85,7 +88,8 @@
                 android:background="@color/color_secondary"
                 android:padding="10dp">
 
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/add_bar_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -196,21 +200,32 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center"
                     android:src="@drawable/facebook_icon" />
-
-                <TextView
-                    android:id="@+id/facebook"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:orientation="vertical"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@string/info_link_like"
-                    android:textColor="@color/color_url_link"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/facebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/info_link_like"
+                        android:textColor="@color/color_url_link"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/fanCountText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="86 käyttäjää tykkää tästä"
+                        android:textColor="@color/color_text_hint"
+                        android:textSize="13sp"/>
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

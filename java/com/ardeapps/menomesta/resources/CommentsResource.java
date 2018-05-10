@@ -7,7 +7,7 @@ import com.ardeapps.menomesta.handlers.GetCityCommentHandler;
 import com.ardeapps.menomesta.handlers.GetCityCommentsHandler;
 import com.ardeapps.menomesta.handlers.GetOlderMessagesHandler;
 import com.ardeapps.menomesta.objects.Comment;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class CommentsResource extends FirebaseService {
+public class CommentsResource extends FirebaseDatabaseService {
     private static CommentsResource instance;
     private static DatabaseReference database;
 

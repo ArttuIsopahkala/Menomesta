@@ -143,10 +143,10 @@ public class StatisticsFragment extends Fragment {
         list.removeAllViewsInLayout();
         final Holder holder = new Holder();
         LayoutInflater inflater = LayoutInflater.from(context);
-        for (int i = 0; i < 5; i++) {
-            if (drinks.size() > i + 1) {
+        for (int i = 0; i < drinks.size(); i++) {
+            if (i < 5) {
                 Drink drink = drinks.get(i);
-                View cv = inflater.inflate(R.layout.stat_list_item, list, false);
+                View cv = inflater.inflate(R.layout.list_item_stat, list, false);
                 holder.barName = (TextView) cv.findViewById(R.id.barName);
                 holder.value = (TextView) cv.findViewById(R.id.value);
                 holder.starContainer = (LinearLayout) cv.findViewById(R.id.starContainer);
@@ -174,10 +174,10 @@ public class StatisticsFragment extends Fragment {
         list.removeAllViewsInLayout();
         final Holder holder = new Holder();
         LayoutInflater inflater = LayoutInflater.from(context);
-        for (int i = 0; i < 5; i++) {
-            if (stats.size() > i + 1) {
+        for (int i = 0; i < stats.size(); i++) {
+            if (i < 5) {
                 VoteStat stat = stats.get(i);
-                View cv = inflater.inflate(R.layout.stat_list_item, list, false);
+                View cv = inflater.inflate(R.layout.list_item_stat, list, false);
                 holder.barName = (TextView) cv.findViewById(R.id.barName);
                 holder.value = (TextView) cv.findViewById(R.id.value);
                 holder.starContainer = (LinearLayout) cv.findViewById(R.id.starContainer);
@@ -204,10 +204,10 @@ public class StatisticsFragment extends Fragment {
         list.removeAllViewsInLayout();
         final Holder holder = new Holder();
         LayoutInflater inflater = LayoutInflater.from(context);
-        for (int i = 0; i < 5; i++) {
-            if (stats.size() > i + 1) {
+        for (int i = 0; i < stats.size(); i++) {
+            if (i < 5) {
                 RatingStat stat = stats.get(i);
-                View cv = inflater.inflate(R.layout.stat_list_item, list, false);
+                View cv = inflater.inflate(R.layout.list_item_stat, list, false);
                 holder.barName = (TextView) cv.findViewById(R.id.barName);
                 holder.value = (TextView) cv.findViewById(R.id.value);
                 holder.starContainer = (LinearLayout) cv.findViewById(R.id.starContainer);

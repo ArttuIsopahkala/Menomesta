@@ -14,44 +14,78 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.PrefRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
-import com.ardeapps.menomesta.handlers.FirebaseAuthHandler;
+import com.ardeapps.menomesta.handlers.FirebaseLoginHandler;
 import com.ardeapps.menomesta.handlers.GetAppDataHandler;
-import com.ardeapps.menomesta.handlers.GetBarListDataHandler;
+import com.ardeapps.menomesta.handlers.GetBarsHandler;
 import com.ardeapps.menomesta.handlers.GetCityCommentsHandler;
 import com.ardeapps.menomesta.handlers.GetCityNamesHandler;
-import com.ardeapps.menomesta.handlers.GetEventsHandler;
+import com.ardeapps.menomesta.handlers.GetDrinkListHandler;
+import com.ardeapps.menomesta.handlers.GetEventVotesHandler;
+import com.ardeapps.menomesta.handlers.GetFacebookBarDetailsHandler;
+import com.ardeapps.menomesta.handlers.GetFacebookEventsHandler;
+import com.ardeapps.menomesta.handlers.GetRatingStatsHandler;
+import com.ardeapps.menomesta.handlers.GetRatingsHandler;
 import com.ardeapps.menomesta.handlers.GetUserHandler;
+import com.ardeapps.menomesta.handlers.GetVoteStatsHandler;
+import com.ardeapps.menomesta.handlers.GetVotesHandler;
 import com.ardeapps.menomesta.objects.Bar;
 import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.Drink;
 import com.ardeapps.menomesta.objects.Event;
+import com.ardeapps.menomesta.objects.EventVote;
+import com.ardeapps.menomesta.objects.FacebookBarDetails;
 import com.ardeapps.menomesta.objects.Rating;
 import com.ardeapps.menomesta.objects.RatingStat;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.objects.Vote;
 import com.ardeapps.menomesta.objects.VoteStat;
 import com.ardeapps.menomesta.resources.AppDataResource;
+import com.ardeapps.menomesta.resources.BarsResource;
 import com.ardeapps.menomesta.resources.CityNamesResource;
 import com.ardeapps.menomesta.resources.CommentsResource;
-import com.ardeapps.menomesta.resources.EventsResource;
+import com.ardeapps.menomesta.resources.DrinksResource;
+import com.ardeapps.menomesta.resources.EventVotesResource;
+import com.ardeapps.menomesta.resources.RatingStatsResource;
+import com.ardeapps.menomesta.resources.RatingsResource;
 import com.ardeapps.menomesta.resources.UsersResource;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.resources.VoteStatsResource;
+import com.ardeapps.menomesta.resources.VotesResource;
+import com.ardeapps.menomesta.services.FacebookService;
+import com.ardeapps.menomesta.services.FirebaseAuthService;
 import com.ardeapps.menomesta.utils.Helper;
+import com.ardeapps.menomesta.utils.Logger;
 import com.ardeapps.menomesta.utils.StringUtils;
+import com.ardeapps.menomesta.views.Loader;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.ardeapps.menomesta.PrefRes.CITY;
 
-public class LoaderFragment extends Fragment implements FirebaseAuthHandler, GetUserHandler, GetBarListDataHandler,
-        GetCityCommentsHandler, GetCityNamesHandler, GetAppDataHandler, GetEventsHandler {
+public class LoaderFragment extends Fragment implements FirebaseLoginHandler, GetUserHandler, GetCityNamesHandler {
+
+    public interface Listener {
+        void onMainDataLoaded();
+
+        void onUserNotFound();
+    }
+
+    Listener mListener = null;
+
+    public void setListener(Listener l) {
+        mListener = l;
+    }
 
     AppRes appRes = (AppRes) AppRes.getContext();
     TextView addCityText;
@@ -61,11 +95,9 @@ public class LoaderFragment extends Fragment implements FirebaseAuthHandler, Get
 
     User userToSave;
     String cityToSave;
-    Listener mListener = null;
 
-    public void setListener(Listener l) {
-        mListener = l;
-    }
+    private int callsCompleted = 0;
+    private static final int callsToMake = 9;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,13 +118,13 @@ public class LoaderFragment extends Fragment implements FirebaseAuthHandler, Get
         if (user != null)
             UsersResource.getInstance().getUser(user.getUid(), this);
         else
-            FirebaseService.logInToFirebase(this);
+            FirebaseAuthService.getInstance().logInToFirebase(this);
 
         return v;
     }
 
     @Override
-    public void onFirebaseAuthSuccess(String userId) {
+    public void onFirebaseLoginSuccess(String userId) {
         UsersResource.getInstance().getUser(userId, this);
     }
 
@@ -144,7 +176,7 @@ public class LoaderFragment extends Fragment implements FirebaseAuthHandler, Get
                 addCityText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        NewCityDialogFragment dialog = new NewCityDialogFragment();
+                        AddCityDialogFragment dialog = new AddCityDialogFragment();
                         dialog.show(getFragmentManager(), "Lisää kaupunki");
                     }
                 });
@@ -171,46 +203,112 @@ public class LoaderFragment extends Fragment implements FirebaseAuthHandler, Get
         UsersResource.getInstance().editUser(userToSave);
         AppRes.setUser(userToSave);
 
-        AppDataResource.getInstance().getAppData(LoaderFragment.this);
+        loadMainData();
     }
 
-    @Override
-    public void onAppDataLoaded() {
-        CommentsResource.getInstance().getComments(this);
+    private void loadMainData() {
+        Loader.showPermanent();
+        callsCompleted = 0;
+        AppDataResource.getInstance().getAppData(new GetAppDataHandler() {
+            @Override
+            public void onAppDataLoaded(String facebookAppToken, String currentAppVersion) {
+                appRes.setCurrentAppVersion(currentAppVersion);
+
+                // Sovelluksen access token
+                final String appAccessToken = getString(R.string.facebook_app_id) + "|" + facebookAppToken;
+                AccessToken token = new AccessToken(appAccessToken, getString(R.string.facebook_app_id), getString(R.string.facebook_app_id),
+                        null, null, null, null, null);
+                FbRes.setAppAccessToken(token);
+                BarsResource.getInstance().getBars(new GetBarsHandler() {
+                    @Override
+                    public void onBarsLoaded(final Map<String, Bar> bars) {
+                        appRes.setBars(bars);
+                        ArrayList<String> facebookIds = new ArrayList<>();
+                        final Map<Bar, String> barFacebookIds = new HashMap<>();
+                        for (final Bar bar : bars.values()) {
+                            if (!StringUtils.isEmptyString(bar.facebookId)) {
+                                barFacebookIds.put(bar, bar.facebookId);
+                            }
+                        }
+                        FbRes.setBarFacebookIds(barFacebookIds);
+                        FacebookService.getInstance().getEvents(barFacebookIds, new GetFacebookEventsHandler() {
+                            @Override
+                            public void onFacebookEventsLoaded(Map<String, ArrayList<Event>> facebookEvents) {
+                                FbRes.setEvents(facebookEvents);
+                                checkIfMainDataLoaded();
+                            }
+                        });
+                        FacebookService.getInstance().getBarDetails(barFacebookIds, new GetFacebookBarDetailsHandler() {
+                            @Override
+                            public void onFacebookBarDetailsLoaded(ArrayList<String> unsupportedBars, Map<String, FacebookBarDetails> facebookBarDetails) {
+                                FbRes.setUnsupportedBars(unsupportedBars);
+                                FbRes.setBarDetails(facebookBarDetails);
+                                checkIfMainDataLoaded();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        CommentsResource.getInstance().getComments(new GetCityCommentsHandler() {
+            @Override
+            public void onCityCommentsLoaded(ArrayList<Comment> cityComments) {
+                Collections.reverse(cityComments);
+                appRes.setCityComments(cityComments);
+                checkIfMainDataLoaded();
+            }
+        });
+        VotesResource.getInstance().getVotes(new GetVotesHandler() {
+            @Override
+            public void onVotesLoaded(final Map<String, ArrayList<Vote>> votes, final Map<String, String> userVotes) {
+                appRes.setVotes(votes);
+                appRes.setUserVotes(userVotes);
+                checkIfMainDataLoaded();
+            }
+        });
+        RatingsResource.getInstance().getRatings(new GetRatingsHandler() {
+            @Override
+            public void onRatingsLoaded(final Map<String, ArrayList<Rating>> ratings, final Map<String, String> userRatings) {
+                appRes.setRatings(ratings);
+                appRes.setUserRatings(userRatings);
+                checkIfMainDataLoaded();
+            }
+        });
+        VoteStatsResource.getInstance().getAllTimeVoteStats(new GetVoteStatsHandler() {
+            @Override
+            public void onVoteStatsLoaded(final Map<String, VoteStat> allTimeVoteStats) {
+                appRes.setAllTimeVoteStats(allTimeVoteStats);
+                checkIfMainDataLoaded();
+            }
+        });
+        RatingStatsResource.getInstance().getAllTimeRatingStats(new GetRatingStatsHandler() {
+            @Override
+            public void onRatingStatsLoaded(final Map<String, RatingStat> allTimeRatingStats) {
+                appRes.setAllTimeRatingStats(allTimeRatingStats);
+                checkIfMainDataLoaded();
+            }
+        });
+        DrinksResource.getInstance().getAllDrinks(new GetDrinkListHandler() {
+            @Override
+            public void onDrinkListLoaded(final ArrayList<Drink> drinks) {
+                appRes.setDrinks(drinks);
+                checkIfMainDataLoaded();
+            }
+        });
+        EventVotesResource.getInstance().getEventVotes(new GetEventVotesHandler() {
+            @Override
+            public void onEventVotesLoaded(Map<String, ArrayList<EventVote>> eventVotes, Map<String, String> userEventVotes) {
+                appRes.setEventVotes(eventVotes);
+                appRes.setUserEventVotes(userEventVotes);
+                checkIfMainDataLoaded();
+            }
+        });
     }
 
-    @Override
-    public void onCityCommentsLoaded(ArrayList<Comment> cityComments) {
-        Collections.reverse(cityComments);
-        appRes.setCityComments(cityComments);
-        EventsResource.getInstance().getEvents(this);
+    private void checkIfMainDataLoaded() {
+        if (++callsCompleted == callsToMake) {
+            Loader.hidePermanent();
+            mListener.onMainDataLoaded();
+        }
     }
-
-    @Override
-    public void onEventsLoaded(ArrayList<Event> events) {
-        appRes.setEvents(events);
-        Helper.getBarListData(this);
-    }
-
-    @Override
-    public void onBarListDataLoaded(Map<String, Bar> bars, Map<String, ArrayList<Vote>> votes, Map<String, String> userVotes,
-                                    Map<String, ArrayList<Rating>> ratings, Map<String, String> userRatings, Map<String, VoteStat> allTimeVoteStats,
-                                    Map<String, RatingStat> allTimeRatingStats, ArrayList<Drink> drinks) {
-        appRes.setBarsAndBarNames(bars);
-        appRes.setVotes(votes);
-        appRes.setUserVotes(userVotes);
-        appRes.setRatings(ratings);
-        appRes.setUserRatings(userRatings);
-        appRes.setAllTimeVoteStats(allTimeVoteStats);
-        appRes.setAllTimeRatingStats(allTimeRatingStats);
-        appRes.setDrinks(drinks);
-        mListener.onMainDataLoaded();
-    }
-
-    public interface Listener {
-        void onMainDataLoaded();
-
-        void onUserNotFound();
-    }
-
 }

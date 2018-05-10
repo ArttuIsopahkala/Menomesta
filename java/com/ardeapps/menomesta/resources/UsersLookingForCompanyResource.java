@@ -8,7 +8,7 @@ import com.ardeapps.menomesta.handlers.IsUsersLookingForCompanyHandler;
 import com.ardeapps.menomesta.handlers.ObjectExistsHandler;
 import com.ardeapps.menomesta.objects.CompanyMessage;
 import com.ardeapps.menomesta.objects.User;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class UsersLookingForCompanyResource extends FirebaseService {
+public class UsersLookingForCompanyResource extends FirebaseDatabaseService {
     private static UsersLookingForCompanyResource instance;
     private static DatabaseReference database;
 
@@ -101,7 +101,7 @@ public class UsersLookingForCompanyResource extends FirebaseService {
 
                             if (!DateUtil.isAfterYesterday(companyMessage.time)) {
                                 // Aseta ettei käyttäjä hae enää seuraa
-                                // Tässä commentId ja userId on sama
+                                // Tässä reviewId ja userId on sama
                                 User user = AppRes.getUser().clone();
                                 if (companyMessage.commentId.equals(user.userId)) {
                                     user.isLookingFor = false;

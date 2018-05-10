@@ -4,14 +4,18 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.fragments.BarsFragment;
 import com.ardeapps.menomesta.fragments.ChatFragment;
 import com.ardeapps.menomesta.fragments.EventsFragment;
+import com.ardeapps.menomesta.objects.Event;
+import com.ardeapps.menomesta.utils.Logger;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Arttu on 24.9.2016.

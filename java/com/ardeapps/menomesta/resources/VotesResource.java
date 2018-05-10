@@ -7,7 +7,7 @@ import com.ardeapps.menomesta.handlers.GetUsersMapHandler;
 import com.ardeapps.menomesta.handlers.GetVotesHandler;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.objects.Vote;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class VotesResource extends FirebaseService {
+public class VotesResource extends FirebaseDatabaseService {
     private static VotesResource instance;
     private static DatabaseReference database;
 
@@ -42,7 +42,7 @@ public class VotesResource extends FirebaseService {
     }
 
     /**
-     * Käytetään kun haetaan baarilistaan votet. Sisältää myös event voteja, jotka voivat olla tulevaisuudessa.
+     * Käytetään kun haetaan baarilistaan votet.
      */
     public void getVotes(final GetVotesHandler handler) {
         getData(database, new GetDataSuccessListener() {
@@ -58,7 +58,7 @@ public class VotesResource extends FirebaseService {
                     for (DataSnapshot object : bar.getChildren()) {
                         final Vote vote = object.getValue(Vote.class);
                         if (vote != null) {
-                            if (DateUtil.isToday(vote.time) || vote.time > System.currentTimeMillis()) {
+                            if (DateUtil.isToday(vote.time)) {
                                 if (vote.userId.equals(AppRes.getUser().userId) && userVotes.get(barId) == null) {
                                     userVotes.put(barId, vote.voteId);
                                 }

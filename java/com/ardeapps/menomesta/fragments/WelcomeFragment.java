@@ -11,18 +11,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.PrefRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
-import com.ardeapps.menomesta.handlers.FirebaseAuthHandler;
+import com.ardeapps.menomesta.handlers.FacebookLoginHandler;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.resources.UsersResource;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FacebookService;
+import com.ardeapps.menomesta.services.FirebaseAuthService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
+import com.ardeapps.menomesta.utils.Logger;
 import com.ardeapps.menomesta.utils.StringUtils;
 import com.ardeapps.menomesta.views.BirthdayPicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static com.ardeapps.menomesta.PrefRes.COMMENT_NOTIFICATIONS;
 import static com.ardeapps.menomesta.PrefRes.COMPANY_NOTIFICATIONS;
@@ -41,6 +48,7 @@ public class WelcomeFragment extends Fragment {
     Button saveButton;
     TextView description;
     BirthdayPicker birthdayPicker;
+    Button loginButton;
     User oldUser;
 
     public void setListener(Listener l) {
@@ -56,7 +64,38 @@ public class WelcomeFragment extends Fragment {
         femaleRadioButton = (RadioButton) v.findViewById(R.id.radioWoman);
         saveButton = (Button) v.findViewById(R.id.saveButton);
         description = (TextView) v.findViewById(R.id.description);
-        birthdayPicker = (BirthdayPicker) v.findViewById(R.id.birthday_picker);
+        birthdayPicker = (BirthdayPicker) v.findViewById(R.id.birthdayPicker);
+        loginButton = (Button) v.findViewById(R.id.loginButton);
+
+        FacebookService.getInstance().setLogInListener(getActivity(), loginButton, new FacebookLoginHandler() {
+            @Override
+            public void onLoginSuccess(String gender, String birthdayString) {
+                loginButton.setEnabled(false);
+                boolean profileValid = true;
+                if(gender.equals(FEMALE)) {
+                    femaleRadioButton.setChecked(true);
+                } else {
+                    maleRadioButton.setChecked(true);
+                }
+                if(!StringUtils.isEmptyString(birthdayString)) {
+                    try {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                        Calendar birthday = Calendar.getInstance();
+                        birthday.setTime(dateFormat.parse(birthdayString));
+                        birthdayPicker.setDate(birthday);
+                    } catch (ParseException ex) {
+                        profileValid = false;
+                    }
+                }
+                if(profileValid) {
+                    saveProfile();
+                }
+            }
+
+            @Override
+            public void onLoginFailed() {
+            }
+        });
 
         Calendar birthday = Calendar.getInstance();
 
@@ -114,9 +153,9 @@ public class WelcomeFragment extends Fragment {
         }
 
         // Rekisteröidytään Firebaseen, saadaan userId
-        FirebaseService.registerToFirebase(new FirebaseAuthHandler() {
+        FirebaseAuthService.getInstance().registerToFirebase(new FirebaseAuthService.RegisterToFirebaseHandler() {
             @Override
-            public void onFirebaseAuthSuccess(String userId) {
+            public void registerToFirebaseSuccess(String userId) {
                 long creationTime = System.currentTimeMillis();
                 final User user = new User();
                 user.userId = userId;

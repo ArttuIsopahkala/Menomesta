@@ -28,7 +28,7 @@ import com.ardeapps.menomesta.views.IconView;
 import java.util.ArrayList;
 
 import static com.ardeapps.menomesta.objects.User.MALE;
-import static com.ardeapps.menomesta.services.FirebaseService.messageLimit;
+import static com.ardeapps.menomesta.services.FirebaseDatabaseService.messageLimit;
 
 public class PrivateFragment extends Fragment implements PrivateListAdapter.PrivateListAdapterListener {
 

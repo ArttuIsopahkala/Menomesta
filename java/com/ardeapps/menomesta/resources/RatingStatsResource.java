@@ -3,7 +3,7 @@ package com.ardeapps.menomesta.resources;
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.handlers.GetRatingStatsHandler;
 import com.ardeapps.menomesta.objects.RatingStat;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class RatingStatsResource extends FirebaseService {
+public class RatingStatsResource extends FirebaseDatabaseService {
     private static RatingStatsResource instance;
     private static DatabaseReference database;
 

@@ -58,14 +58,15 @@
                         android:textSize="12sp" />
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/report_icon"
+                    android:id="@+id/reportIcon"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="0.14"
                     android:gravity="center_horizontal|bottom"
                     android:orientation="horizontal">
 
-                    <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <com.ardeapps.menomesta.views.IconView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/icon_dots"
@@ -122,7 +123,7 @@
                 android:orientation="vertical">
 
                 <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/like_icon"
+                    android:id="@+id/likeIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/icon_arrow_up"

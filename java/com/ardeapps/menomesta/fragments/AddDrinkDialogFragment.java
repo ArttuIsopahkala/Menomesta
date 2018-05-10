@@ -50,7 +50,7 @@ public class AddDrinkDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.add_drink_dialog, container);
+        View v = inflater.inflate(R.layout.dialog_add_drink, container);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -101,7 +101,7 @@ public class AddDrinkDialogFragment extends DialogFragment {
                     showValueError(getString(R.string.prices_error_size));
                     return;
                 }
-                if (size == 0 || size > 5) {
+                if (size == 0 || size > 1) {
                     showValueError(getString(R.string.prices_error_size));
                     return;
                 }
@@ -111,7 +111,7 @@ public class AddDrinkDialogFragment extends DialogFragment {
                     showValueError(getString(R.string.prices_error_price));
                     return;
                 }
-                if (price == 0 || price > 100) {
+                if (price == 0 || price > 40) {
                     showValueError(getString(R.string.prices_error_price));
                     return;
                 }

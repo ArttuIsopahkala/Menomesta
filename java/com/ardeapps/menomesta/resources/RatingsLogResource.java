@@ -2,14 +2,14 @@ package com.ardeapps.menomesta.resources;
 
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.objects.Rating;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DatabaseReference;
 
 /**
  * Created by Arttu on 19.1.2018.
  */
 
-public class RatingsLogResource extends FirebaseService {
+public class RatingsLogResource extends FirebaseDatabaseService {
     private static RatingsLogResource instance;
     private static DatabaseReference database;
 

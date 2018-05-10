@@ -5,7 +5,7 @@ import com.ardeapps.menomesta.handlers.AddSuccessListener;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetDrinkListHandler;
 import com.ardeapps.menomesta.objects.Drink;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class DrinksResource extends FirebaseService {
+public class DrinksResource extends FirebaseDatabaseService {
     private static DrinksResource instance;
     private static DatabaseReference database;
 

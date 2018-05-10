@@ -32,7 +32,9 @@
             android:padding="10dp"
             android:text="@string/submit_city_desc"
             android:textColor="@color/color_text_light"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:lineSpacingExtra="2dp"
+            android:autoLink="web"/>
     </ScrollView>
     <Button
         android:id="@+id/btn_ok"

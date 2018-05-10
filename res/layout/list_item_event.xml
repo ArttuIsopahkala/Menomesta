@@ -5,7 +5,15 @@
     android:background="@color/color_secondary"
     android:orientation="vertical"
     android:padding="10dp"
+    android:layout_margin="3dp"
     android:weightSum="1">
+    <TextView
+        android:id="@+id/event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nimi"
+        android:textColor="@color/color_text_light"
+        android:textSize="20sp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,24 +25,15 @@
             android:layout_weight="0.7"
             android:minHeight="90dp"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/event_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:text="Nimi"
-                android:textColor="@color/color_text_light"
-                android:textSize="22sp"/>
             <LinearLayout
                 android:id="@+id/timeContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/event_name"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -61,7 +60,8 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -93,29 +93,26 @@
                 android:textColor="@color/color_link"
                 android:textSize="14sp" />
             <LinearLayout
-                android:id="@+id/priceContent"
+                android:id="@+id/attendeesContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/open_map_text"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:alpha="0.8"
-                    android:padding="2dp"
-                    android:text="@string/icon_money"
-                    app:iconColor="@color/color_money"
-                    app:iconFont="@string/icon_light"
-                    app:iconSize="12sp" />
+                    android:src="@drawable/facebook_icon" />
                 <TextView
-                    android:id="@+id/priceText"
+                    android:id="@+id/attendeesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pääsymaksu"
+                    android:text="203 osallistujaa"
                     android:textColor="@color/color_text_light"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -123,7 +120,7 @@
                 android:id="@+id/descriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/priceContent"
+                android:layout_below="@+id/attendeesContent"
                 android:layout_marginTop="5dp"
                 android:text="Esittelyteksti"
                 android:textColor="@color/color_text_light"
@@ -157,47 +154,5 @@
                     android:textSize="12sp"/>
             </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/report_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/icon_dots"
-            app:iconFont="@string/icon_solid"
-            app:iconSize="12sp" />
-
-        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/edit_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/selector"
-            android:padding="8dp"
-            android:text="@string/icon_edit"
-            app:iconFont="@string/icon_solid"
-            app:iconSize="14sp" />
-
-        <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/remove_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/selector"
-            android:padding="8dp"
-            android:text="@string/icon_remove"
-            app:iconFont="@string/icon_solid"
-            app:iconSize="14sp" />
     </LinearLayout>
 </LinearLayout>

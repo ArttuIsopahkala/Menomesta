@@ -9,11 +9,15 @@ import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.CompanyMessage;
 import com.ardeapps.menomesta.objects.Drink;
 import com.ardeapps.menomesta.objects.Event;
+import com.ardeapps.menomesta.objects.EventVote;
+import com.ardeapps.menomesta.objects.FacebookBarDetails;
 import com.ardeapps.menomesta.objects.Rating;
 import com.ardeapps.menomesta.objects.RatingStat;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.objects.Vote;
 import com.ardeapps.menomesta.objects.VoteStat;
+import com.ardeapps.menomesta.utils.StringUtils;
+import com.facebook.AccessToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,21 +34,25 @@ public class AppRes extends Application {
     private static User myUser;
     private static String myCity;
     private boolean isAdmin;
-    private boolean isUsersLookingForCompany;
     private boolean isUserPremium;
     private ArrayList<String> cityNames = new ArrayList<>();
     private Map<String, Bar> bars = new HashMap<>();
     private Map<String, ArrayList<Vote>> votes = new HashMap<>();
     private Map<String, String> userVotes = new HashMap<>();
+    private Map<String, ArrayList<EventVote>> eventVotes = new HashMap<>();
+    private Map<String, String> userEventVotes = new HashMap<>();
     private ArrayList<Comment> cityComments = new ArrayList<>();
     private ArrayList<Drink> drinks = new ArrayList<>();
-    private ArrayList<Event> events = new ArrayList<>();
     private Map<String, ArrayList<Rating>> ratings = new HashMap<>();
     private Map<String, String> userRatings = new HashMap<>();
     private Map<String, VoteStat> allTimeVoteStats = new HashMap<>();
     private Map<String, RatingStat> allTimeRatingStats = new HashMap<>();
-    private CompanyMessage companyMessage;
     private Location location;
+    private String currentAppVersion;
+
+    // Ei käytetä
+    private CompanyMessage companyMessage;
+    private boolean isUsersLookingForCompany;
 
     public static Context getContext() {
         return mContext;
@@ -70,6 +78,14 @@ public class AppRes extends Application {
 
         // Tallennetaan myös lokaalisti
         PrefRes.putString(CITY, city);
+    }
+
+    public void setCurrentAppVersion(String currentAppVersion) {
+        this.currentAppVersion = currentAppVersion;
+    }
+
+    public String getCurrentAppVersion() {
+        return currentAppVersion;
     }
 
     @Override
@@ -137,7 +153,7 @@ public class AppRes extends Application {
     /**
      * BARS
      */
-    public void setBarsAndBarNames(Map<String, Bar> bars) {
+    public void setBars(Map<String, Bar> bars) {
         this.bars = bars;
     }
 
@@ -147,10 +163,6 @@ public class AppRes extends Application {
 
     public void setBar(String barId, Bar bar) {
         bars.put(barId, bar);
-    }
-
-    public Map<String, ArrayList<Vote>> getVotes() {
-        return votes;
     }
 
     /**
@@ -196,8 +208,55 @@ public class AppRes extends Application {
         }
     }
 
-    public Map<String, ArrayList<Rating>> getRatings() {
-        return ratings;
+    public Map<String, ArrayList<Vote>> getVotes() {
+        return votes;
+    }
+
+    /**
+     * EVENT VOTES
+     */
+    public void setEventVotes(Map<String, ArrayList<EventVote>> eventVotes) {
+        this.eventVotes = eventVotes;
+    }
+
+    public Map<String, String> getUserEventVotes() {
+        return userEventVotes;
+    }
+
+    public void setUserEventVotes(Map<String, String> userEventVotes) {
+        this.userEventVotes = userEventVotes;
+    }
+
+    public void setEventVote(String eventId, String voteId, EventVote eventVote) {
+        if (eventVote != null) {
+            userVotes.put(eventId, eventVote.voteId);
+        } else {
+            userVotes.remove(eventId);
+        }
+        ArrayList<EventVote> existingEventVotes = eventVotes.get(eventId);
+        if (existingEventVotes != null) {
+            for (int index = 0; index < existingEventVotes.size(); index++) {
+                if (existingEventVotes.get(index).voteId.equals(voteId)) {
+                    if (eventVote == null) {
+                        eventVotes.get(eventId).remove(index);
+                    } else {
+                        // Tätä ei koskaan käytetä
+                        eventVotes.get(eventId).set(index, eventVote);
+                    }
+                    return;
+                }
+            }
+            existingEventVotes.add(eventVote);
+            eventVotes.put(eventId, existingEventVotes);
+        } else {
+            existingEventVotes = new ArrayList<>();
+            existingEventVotes.add(eventVote);
+            eventVotes.put(eventId, existingEventVotes);
+        }
+    }
+
+    public Map<String, ArrayList<EventVote>> getEventVotes() {
+        return eventVotes;
     }
 
     /**
@@ -243,8 +302,8 @@ public class AppRes extends Application {
         }
     }
 
-    public ArrayList<Comment> getCityComments() {
-        return cityComments;
+    public Map<String, ArrayList<Rating>> getRatings() {
+        return ratings;
     }
 
     /**
@@ -272,8 +331,8 @@ public class AppRes extends Application {
         }
     }
 
-    public ArrayList<Drink> getDrinks() {
-        return drinks;
+    public ArrayList<Comment> getCityComments() {
+        return cityComments;
     }
 
     /**
@@ -301,32 +360,8 @@ public class AppRes extends Application {
         }
     }
 
-    public ArrayList<Event> getEvents() {
-        return events;
+    public ArrayList<Drink> getDrinks() {
+        return drinks;
     }
 
-    /**
-     * EVENTS
-     */
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
-    }
-
-    public void setEvent(String eventId, Event event) {
-        if (events == null)
-            events = new ArrayList<>();
-        for (int index = 0; index < events.size(); index++) {
-            if (events.get(index).eventId.equals(eventId)) {
-                if (event == null) {
-                    events.remove(index);
-                } else {
-                    events.set(index, event);
-                }
-                return;
-            }
-        }
-        if (event != null) {
-            events.add(event);
-        }
-    }
 }

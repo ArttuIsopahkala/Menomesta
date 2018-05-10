@@ -3,6 +3,7 @@ package com.ardeapps.menomesta;
 import android.content.SharedPreferences;
 
 import com.ardeapps.menomesta.objects.User;
+import com.facebook.share.Share;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +16,14 @@ public class PrefRes {
     // App
     public static final String IS_APP_VISIBLE = "isAppVisible";
     public static final String APP_STARTED_FIRST_TIME = "appStartedFirstTime";
+    public static final String FACEBOOK_PERMISSION_DENY_CITIES = "facebook_permission_deny_cities";
+    public static final String LATEST_APP_VERSION_HANDLED = "latest_app_version_handled";
     // Credentials
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
-    public static final String TOKEN = "token";
+    public static final String TOKEN = "token"; // This token is main access to Firebase database
     public static final String CITY = "city";
+    public static final String FB_ACCESS_TOKEN = "fb_access_token";
     // Info page
     public static final String RATE_TIME = "rateTime";
     public static final String LIKE_TIME = "likeTime";
@@ -51,8 +55,15 @@ public class PrefRes {
     private static final String IS_LOOKING_FOR = "isLookingFor";
     private static final String PREMIUM = "premium";
 
+
     private static SharedPreferences getSharedPref() {
         return AppRes.getContext().getSharedPreferences(APP_PREF, 0);
+    }
+
+    public static void clearPref() {
+        SharedPreferences.Editor editor = getSharedPref().edit();
+        editor.clear();
+        editor.apply();
     }
 
     public static User getUser() {

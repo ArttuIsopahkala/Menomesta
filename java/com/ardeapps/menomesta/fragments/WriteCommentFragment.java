@@ -36,7 +36,7 @@ public class WriteCommentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_send_comment, container, false);
+        View v = inflater.inflate(R.layout.fragment_write_comment, container, false);
         send_comment = (TextView) v.findViewById(R.id.send_comment);
         message = (EditText) v.findViewById(R.id.message);
         stop_writing = (IconView) v.findViewById(R.id.stop_writing);

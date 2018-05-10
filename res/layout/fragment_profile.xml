@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_main"
@@ -129,7 +130,7 @@
                     android:textStyle="bold" />
 
                 <com.ardeapps.menomesta.views.BirthdayPicker
-                    android:id="@+id/birthday_picker"
+                    android:id="@+id/birthdayPicker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7" />
@@ -339,6 +340,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/loginButton"
+                android:text="@string/facebook_login"
+                android:textColor="@color/color_text_light"
+                android:background="@drawable/facebook_button"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/notificationCompanyContent"
+                android:layout_centerHorizontal="true"/>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/deleteButton"
+                android:text="@string/profile_delete"
+                android:textColor="@color/color_text_light"
+                android:background="@color/color_bar_closed"
+                android:layout_below="@+id/loginButton"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

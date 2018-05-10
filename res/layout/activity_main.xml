@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:facebook="http://schemas.android.com/tools"
     android:background="@color/color_menu"
     android:orientation="vertical">
 
@@ -26,6 +27,57 @@
         android:layout_below="@+id/tabLayout"
         android:layout_centerHorizontal="true" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/facebookPermission"
+        android:orientation="vertical"
+        android:layout_above="@id/menu_bottom"
+        android:background="@color/color_menu"
+        android:padding="10dp"
+        android:visibility="gone">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/facebook_description"
+                android:textColor="@color/color_text_light"
+                android:id="@+id/unsupportedBars"
+                android:layout_toLeftOf="@+id/closeFacebookInfoButton"
+                android:layout_toStartOf="@+id/closeFacebookInfoButton"/>
+            <com.ardeapps.menomesta.views.IconView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/closeFacebookInfoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="7dp"
+                android:onClick="denyFacebookLoginHint"
+                android:text="@string/icon_close"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="16sp" />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/facebook_info"
+            android:textColor="@color/color_text_hint"
+            android:layout_marginTop="5dp"
+            android:textStyle="italic"
+            android:textSize="12sp"/>
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginButton"
+            android:text="@string/facebook_login"
+            android:textColor="@color/color_text_light"
+            android:background="@drawable/facebook_button"
+            android:layout_marginTop="10dp"/>
+        </LinearLayout>
     <include
         android:id="@+id/menu_bottom"
         layout="@layout/menu_bar_bottom"

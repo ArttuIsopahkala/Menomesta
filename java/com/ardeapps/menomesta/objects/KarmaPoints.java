@@ -7,8 +7,9 @@ public class KarmaPoints {
     public static long VOTED;
     public static long COMMENTED_CITY;
     public static long COMMENTED_REPLY;
-    public static long COMMENTED_BAR;
-    public static long STARS_ADDED;
+    public static long COMMENTED_BAR; // Vanhentunut
+    public static long STARS_ADDED; // Vanhentunut
+    public static long REVIEWED_BAR;
     public static long LOGGED_IN;
     public static long DRINK_ADDED;
     public static long DRINK_UPDATED;
@@ -21,8 +22,8 @@ public class KarmaPoints {
     public static long COMMENT_LIKED;
     public static long COMMENT_REPORTED;
     public static long PERCENT_TO_BELONG_PREMIUM;
-    public static long EVENT_ADDED;
-    public static long EVENT_REPORTED;
+    public static long EVENT_ADDED; // Vanhentunut
+    public static long EVENT_REPORTED; // Vanhentunut
     public static String CODE_TO_PREMIUM;
 
     public KarmaPoints() {

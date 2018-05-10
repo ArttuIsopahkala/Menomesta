@@ -5,12 +5,21 @@ import android.widget.Toast;
 
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.BuildConfig;
+import com.ardeapps.menomesta.services.FirebaseAuthService;
 
 /**
  * Created by Arttu on 21.8.2017.
  */
 
 public class Logger {
+
+    public static void logInfo(Object message) {
+        if (BuildConfig.DEBUG) {
+            String className = new Exception().getStackTrace()[1].getFileName();
+            Log.i(className, message + "");
+        }
+    }
+
     public static void log(Object message) {
         if (BuildConfig.DEBUG) {
             String className = new Exception().getStackTrace()[1].getFileName();

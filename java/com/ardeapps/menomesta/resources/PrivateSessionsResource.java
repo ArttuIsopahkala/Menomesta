@@ -9,7 +9,7 @@ import com.ardeapps.menomesta.handlers.GetUsersMapHandler;
 import com.ardeapps.menomesta.handlers.serviceHandlers.NewSessionHandler;
 import com.ardeapps.menomesta.objects.Session;
 import com.ardeapps.menomesta.objects.User;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +23,7 @@ import static com.ardeapps.menomesta.PrefRes.LAST_SESSION_ID;
  * Created by Arttu on 19.1.2018.
  */
 
-public class PrivateSessionsResource extends FirebaseService {
+public class PrivateSessionsResource extends FirebaseDatabaseService {
     private static PrivateSessionsResource instance;
     private static DatabaseReference database;
 

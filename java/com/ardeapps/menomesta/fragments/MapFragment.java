@@ -14,8 +14,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.objects.Bar;
+import com.ardeapps.menomesta.objects.FacebookBarDetails;
 import com.ardeapps.menomesta.objects.RatingStat;
 import com.ardeapps.menomesta.objects.Vote;
 import com.ardeapps.menomesta.utils.Helper;
@@ -47,12 +49,12 @@ public class MapFragment extends Fragment {
     Map<String, RatingStat> allTimeRatingStats;
     TextView titleText;
     LinearLayout showClosest;
-    Bar selectedBar;
     AppRes appRes;
     private GoogleMap googleMap;
+    String barName;
 
-    public void refreshData(Bar selectedBar) {
-        this.selectedBar = selectedBar;
+    public void refreshData(String barName) {
+        this.barName = barName;
         appRes = (AppRes) AppRes.getContext();
         bars = appRes.getBars();
         votes = appRes.getVotes();
@@ -142,7 +144,13 @@ public class MapFragment extends Fragment {
                 for (Bar bar : bars.values()) {
                     int allBarsVoteCount = 0;
                     int voteCount = 0;
-                    LatLng currentBar = new LatLng(bar.latitude, bar.longitude);
+                    LatLng currentBar;
+                    FacebookBarDetails detail = FbRes.getBarDetail(bar.barId);
+                    if(detail != null && detail.barLocation != null) {
+                        currentBar = new LatLng(detail.barLocation.latitude, detail.barLocation.longitude);
+                    } else {
+                        currentBar = new LatLng(bar.latitude, bar.longitude);
+                    }
                     if (votes.get(bar.barId) != null) {
                         voteCount = votes.get(bar.barId).size();
                     }
@@ -150,7 +158,7 @@ public class MapFragment extends Fragment {
                         allBarsVoteCount += votes.size();
                     }
 
-                    Marker newMarker = googleMap.addMarker(new MarkerOptions().position(currentBar).icon(getMarkerIcon(voteCount, allBarsVoteCount)).title(bar.name));
+                    Marker newMarker = googleMap.addMarker(new MarkerOptions().position(currentBar).icon(getMarkerIcon(voteCount, allBarsVoteCount)).title(FbRes.getBarDetail(bar.barId) != null ? FbRes.getBarDetail(bar.barId).name : bar.name));
                     if (voteCount == 0) {
                         newMarker.setSnippet("0");
                     } else {
@@ -165,7 +173,7 @@ public class MapFragment extends Fragment {
                     markers.add(newMarker);
                 }
 
-                if (selectedBar == null) {
+                if (barName == null) {
                     LatLng position = Helper.getLocationFromAddress(AppRes.getCity());
                     if (position != null) {
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(14).build();
@@ -178,7 +186,7 @@ public class MapFragment extends Fragment {
                     }
                 } else {
                     for (Marker marker : markers) {
-                        if (marker.getTitle().equals(selectedBar.name)) {
+                        if (marker.getTitle().equals(barName)) {
                             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(marker.getPosition()).zoom(14).build()));
                             marker.showInfoWindow();
                             break;

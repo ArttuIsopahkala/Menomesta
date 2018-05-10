@@ -66,7 +66,7 @@ public class ReplyFragment extends Fragment implements ReplyListAdapter.ReplyLis
         View v = inflater.inflate(R.layout.fragment_reply, container, false);
         replyList = (ListView) v.findViewById(R.id.replyList);
         titleText = (TextView) v.findViewById(R.id.title);
-        addComment = (Button) v.findViewById(R.id.addComment);
+        addComment = (Button) v.findViewById(R.id.showBarInfo);
         menu_line = v.findViewById(R.id.menu_line);
 
         menu_line.setVisibility(View.GONE);

@@ -4,7 +4,7 @@ import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.handlers.GetVoteStatsHandler;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.objects.VoteStat;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class VoteStatsResource extends FirebaseService {
+public class VoteStatsResource extends FirebaseDatabaseService {
     private static VoteStatsResource instance;
     private static DatabaseReference database;
 
@@ -28,7 +28,7 @@ public class VoteStatsResource extends FirebaseService {
         return instance;
     }
 
-    public void editVoteStats(final String barId, final GetVoteStatsHandler handler) {
+    public void editVoteStat(final String barId, final GetVoteStatsHandler handler) {
         getData(database.child(ALL_TIME).child(barId), new GetDataSuccessListener() {
             @Override
             public void onGetDataSuccess(DataSnapshot dataSnapshot) {

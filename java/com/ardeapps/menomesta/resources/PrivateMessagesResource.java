@@ -10,7 +10,7 @@ import com.ardeapps.menomesta.handlers.GetPrivateMessagesHandler;
 import com.ardeapps.menomesta.handlers.ObjectExistsHandler;
 import com.ardeapps.menomesta.handlers.serviceHandlers.NewPrivateMessageHandler;
 import com.ardeapps.menomesta.objects.Comment;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class PrivateMessagesResource extends FirebaseService {
+public class PrivateMessagesResource extends FirebaseDatabaseService {
     private static PrivateMessagesResource instance;
     private static DatabaseReference database;
 

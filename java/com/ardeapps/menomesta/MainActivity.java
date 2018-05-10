@@ -3,6 +3,7 @@ package com.ardeapps.menomesta;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,14 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.adapters.ViewPagerAdapter;
-import com.ardeapps.menomesta.fragments.AddEventFragment;
 import com.ardeapps.menomesta.fragments.BarDetailsFragment;
 import com.ardeapps.menomesta.fragments.BarRequestFragment;
 import com.ardeapps.menomesta.fragments.BarsFragment;
 import com.ardeapps.menomesta.fragments.ChatFragment;
 import com.ardeapps.menomesta.fragments.CompanyFragment;
+import com.ardeapps.menomesta.fragments.ConfirmationDialogFragment;
 import com.ardeapps.menomesta.fragments.EditBarFragment;
 import com.ardeapps.menomesta.fragments.EventsFragment;
+import com.ardeapps.menomesta.fragments.FbBarDetailsFragment;
 import com.ardeapps.menomesta.fragments.InfoDialogFragment;
 import com.ardeapps.menomesta.fragments.InfoFragment;
 import com.ardeapps.menomesta.fragments.LoaderFragment;
@@ -40,14 +43,18 @@ import com.ardeapps.menomesta.fragments.StatisticsFragment;
 import com.ardeapps.menomesta.fragments.WelcomeFragment;
 import com.ardeapps.menomesta.fragments.WriteCommentFragment;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
-import com.ardeapps.menomesta.handlers.GetBarCommentsHandler;
+import com.ardeapps.menomesta.handlers.FacebookLoginHandler;
 import com.ardeapps.menomesta.handlers.GetBarDetailsHandler;
 import com.ardeapps.menomesta.handlers.GetCityCommentHandler;
 import com.ardeapps.menomesta.handlers.GetDrinkListHandler;
+import com.ardeapps.menomesta.handlers.GetFacebookBarDetailsHandler;
+import com.ardeapps.menomesta.handlers.GetFacebookEventsHandler;
+import com.ardeapps.menomesta.handlers.GetFanCountHandler;
 import com.ardeapps.menomesta.handlers.GetPrivateMessagesHandler;
 import com.ardeapps.menomesta.handlers.GetPrivateSessionsHandler;
 import com.ardeapps.menomesta.handlers.GetRatingStatsHandler;
 import com.ardeapps.menomesta.handlers.GetRepliesHandler;
+import com.ardeapps.menomesta.handlers.GetReviewsHandler;
 import com.ardeapps.menomesta.handlers.GetUserHandler;
 import com.ardeapps.menomesta.handlers.GetUsersLookingForCompanyHandler;
 import com.ardeapps.menomesta.handlers.GetVoteStatsHandler;
@@ -60,12 +67,13 @@ import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.CompanyMessage;
 import com.ardeapps.menomesta.objects.Drink;
 import com.ardeapps.menomesta.objects.Event;
+import com.ardeapps.menomesta.objects.FacebookBarDetails;
 import com.ardeapps.menomesta.objects.KarmaPoints;
 import com.ardeapps.menomesta.objects.RatingStat;
+import com.ardeapps.menomesta.objects.Review;
 import com.ardeapps.menomesta.objects.Session;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.objects.VoteStat;
-import com.ardeapps.menomesta.resources.BarCommentsResource;
 import com.ardeapps.menomesta.resources.BarDetailsResource;
 import com.ardeapps.menomesta.resources.CommentsResource;
 import com.ardeapps.menomesta.resources.DrinksResource;
@@ -73,9 +81,12 @@ import com.ardeapps.menomesta.resources.PrivateMessagesResource;
 import com.ardeapps.menomesta.resources.PrivateSessionsResource;
 import com.ardeapps.menomesta.resources.RatingStatsResource;
 import com.ardeapps.menomesta.resources.RepliesResource;
+import com.ardeapps.menomesta.resources.ReviewsResource;
 import com.ardeapps.menomesta.resources.UsersLookingForCompanyResource;
 import com.ardeapps.menomesta.resources.UsersResource;
 import com.ardeapps.menomesta.resources.VoteStatsResource;
+import com.ardeapps.menomesta.services.FacebookService;
+import com.ardeapps.menomesta.services.FirebaseAuthService;
 import com.ardeapps.menomesta.services.FragmentListeners;
 import com.ardeapps.menomesta.utils.Helper;
 import com.ardeapps.menomesta.utils.Logger;
@@ -83,11 +94,11 @@ import com.ardeapps.menomesta.utils.StringUtils;
 import com.ardeapps.menomesta.views.Loader;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.CallbackManager;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -100,8 +111,10 @@ import java.util.Set;
 import io.fabric.sdk.android.Fabric;
 
 import static com.ardeapps.menomesta.PrefRes.APP_STARTED_FIRST_TIME;
+import static com.ardeapps.menomesta.PrefRes.FACEBOOK_PERMISSION_DENY_CITIES;
 import static com.ardeapps.menomesta.PrefRes.IS_APP_VISIBLE;
 import static com.ardeapps.menomesta.PrefRes.LAST_COMMENT_ID;
+import static com.ardeapps.menomesta.PrefRes.LATEST_APP_VERSION_HANDLED;
 import static com.ardeapps.menomesta.PrefRes.SESSION_IDS;
 import static com.ardeapps.menomesta.PrefRes.TOKEN;
 import static com.ardeapps.menomesta.services.FragmentListeners.MY_PERMISSION_ACCESS_COARSE_LOCATION;
@@ -111,7 +124,6 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
     //Fragments
     LoaderFragment loaderFragment;
     BarRequestFragment barRequestFragment;
-    BarDetailsFragment barDetailsFragment;
     WelcomeFragment welcomeFragment;
     InfoFragment infoFragment;
     ReplyFragment replyFragment;
@@ -122,11 +134,12 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
     CompanyFragment companyFragment;
     ShowLocationFragment showLocationFragment;
     ProfileFragment profileFragment;
-    AddEventFragment addEventFragment;
     WriteCommentFragment writeCommentFragment;
     BarsFragment barsFragment;
     ChatFragment chatFragment;
     EventsFragment eventsFragment;
+    BarDetailsFragment barDetailsFragment;
+    FbBarDetailsFragment fbBarDetailsFragment;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -139,6 +152,9 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
     ImageView usersLookingMark;
     ImageView newMessageMark;
     LinearLayout menu_bottom;
+    LinearLayout facebookPermission;
+    Button loginButton;
+    TextView unsupportedBarsText;
     AdView mAdView;
 
     RelativeLayout companyMessageContent; // TODO Seuranhaku-toimintoa vielä toteutettu
@@ -170,6 +186,9 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
         newMessageMark = (ImageView) findViewById(R.id.newMessageMark);
         loader = (RelativeLayout) findViewById(R.id.loader);
         menu_bottom = (LinearLayout) findViewById(R.id.menu_bottom);
+        facebookPermission = (LinearLayout) findViewById(R.id.facebookPermission);
+        loginButton = (Button) findViewById(R.id.loginButton);
+        unsupportedBarsText = (TextView) findViewById(R.id.unsupportedBars);
         mAdView = (AdView) findViewById(R.id.adView);
         // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
         companyMessageContent = (RelativeLayout) findViewById(R.id.companyMessageContent);
@@ -177,7 +196,6 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
         loaderFragment = new LoaderFragment();
         barRequestFragment = new BarRequestFragment();
-        barDetailsFragment = new BarDetailsFragment();
         welcomeFragment = new WelcomeFragment();
         infoFragment = new InfoFragment();
         replyFragment = new ReplyFragment();
@@ -192,12 +210,14 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
         barsFragment = new BarsFragment();
         chatFragment = new ChatFragment();
         eventsFragment = new EventsFragment();
-        addEventFragment = new AddEventFragment();
+        barDetailsFragment = new BarDetailsFragment();
+        fbBarDetailsFragment = new FbBarDetailsFragment();
 
         appRes = (AppRes) AppRes.getContext();
 
         Loader.create(loader, loader_spinner);
-
+        CallbackManager callbackManager = CallbackManager.Factory.create();
+        FacebookService.setCallbackManager(callbackManager);
         setListeners();
 
         appStartedFirstTime = PrefRes.getBoolean(APP_STARTED_FIRST_TIME);
@@ -250,10 +270,27 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
     private void openApp() {
         String token = PrefRes.getString(TOKEN);
         if (StringUtils.isEmptyString(token)) {
-            // Avataan welcomeFragment
-            FragmentListeners.getInstance().getFragmentChangeListener().goToWelcomeFragment();
+            // Jos shared preferences on tyhjennetty, katsotaan voiko Facebookin avulla edelleen kirjautua.
+            // Jos ei voi, tiedot voi edelleen saada uudelleen kun käyttäjä rekisteröityy
+            if (FbRes.isUserLoggedIn()) {
+                // Tänne ei ehkä koskaan päädytä
+                FirebaseAuthService.restoreCredentialsWithFacebook(new FirebaseAuthService.RestoreCredentialsHandler() {
+                    @Override
+                    public void onRestoreCredentialsWithFacebookSuccess() {
+                        FragmentListeners.getInstance().getFragmentChangeListener().goToLoaderFragment();
+                    }
+
+                    @Override
+                    public void onRestoreCredentialsWithFacebookFailed() {
+                        FragmentListeners.getInstance().getFragmentChangeListener().goToWelcomeFragment();
+                    }
+                });
+            } else {
+                // Avataan welcomeFragment
+                FragmentListeners.getInstance().getFragmentChangeListener().goToWelcomeFragment();
+            }
         } else {
-            // Avataan loader
+            // Avataan loader fragment
             FragmentListeners.getInstance().getFragmentChangeListener().goToLoaderFragment();
         }
     }
@@ -267,10 +304,48 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FacebookService.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+    }
+
     /**
      * SET FRAGMENT LISTENERS
      */
     private void setListeners() {
+        FacebookService.getInstance().setLogInListener(this, loginButton, new FacebookLoginHandler() {
+            @Override
+            public void onLoginSuccess(String gender, String birthday) {
+                FirebaseAuthService.getInstance().linkFacebookIfNeeded(new FirebaseAuthService.LinkFacebookIfNeededHandler() {
+                    @Override
+                    public void onLinkFacebookIfNeededSuccess() {
+                        // Lataa Facebook tapahtumat ja baarien tiedot uudelleen
+                        FacebookService.getInstance().getEvents(FbRes.getBarFacebookIds(), new GetFacebookEventsHandler() {
+                            @Override
+                            public void onFacebookEventsLoaded(Map<String, ArrayList<Event>> facebookEvents) {
+                                FbRes.setEvents(facebookEvents);
+                                FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshEventsFragment();
+                                FacebookService.getInstance().getBarDetails(FbRes.getBarFacebookIds(), new GetFacebookBarDetailsHandler() {
+                                    @Override
+                                    public void onFacebookBarDetailsLoaded(ArrayList<String> unsupportedBars, Map<String, FacebookBarDetails> facebookBarDetails) {
+                                        FbRes.setUnsupportedBars(unsupportedBars);
+                                        FbRes.setBarDetails(facebookBarDetails);
+                                        FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshBarsFragment();
+                                    }
+                                });
+                            }
+                        });
+                        facebookPermission.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLoginFailed() {
+
+            }
+        });
         welcomeFragment.setListener(new WelcomeFragment.Listener() {
             @Override
             public void onNewUserSaved() {
@@ -294,6 +369,11 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
             }
         });
         FragmentListeners.getInstance().setPageAdapterRefreshListener(new FragmentListeners.PageAdapterRefreshListener() {
+            @Override
+            public void refreshMainActivity() {
+                setFacebookLoginHint();
+            }
+
             @Override
             public void refreshEventsFragment() {
                 pagerAdapter.updateEvents();
@@ -319,7 +399,11 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
             @Override
             public void goToLoaderFragment() {
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                addFragment(loaderFragment);
+                if(loaderFragment.isAdded()) {
+                    switchToFragment(loaderFragment);
+                } else {
+                    addFragment(loaderFragment);
+                }
             }
 
             @Override
@@ -337,24 +421,34 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
             @Override
             public void goToBarDetailsFragment(final Bar bar) {
-                barDetailsFragment.refreshData();
-                barDetailsFragment.setBar(bar);
                 DrinksResource.getInstance().getDrinks(bar.barId, new GetDrinkListHandler() {
                     @Override
-                    public void onDrinkListLoaded(ArrayList<Drink> drinks) {
-                        barDetailsFragment.setDrinks(drinks);
+                    public void onDrinkListLoaded(final ArrayList<Drink> drinks) {
                         BarDetailsResource.getInstance().getBarDetails(bar.barId, new GetBarDetailsHandler() {
                             @Override
                             public void onBarDetailsLoaded(final BarDetails barDetails) {
-                                barDetailsFragment.setBarDetails(barDetails);
-                                BarCommentsResource.getInstance().getBarComments(bar.barId, new GetBarCommentsHandler() {
+                                ReviewsResource.getInstance().getReviews(bar.barId, new GetReviewsHandler() {
                                     @Override
-                                    public void onBarCommentsLoaded(ArrayList<Comment> barComments) {
-                                        Collections.reverse(barComments);
-                                        barDetailsFragment.setBarComments(barComments);
-                                        editBarFragment.setBarDetails(barDetails);
-
-                                        switchToFragment(barDetailsFragment);
+                                    public void onReviewsLoaded(ArrayList<Review> reviews) {
+                                        Collections.reverse(reviews);
+                                        // Katsotaan onko tiedot saatu Facebookista
+                                        if (FbRes.getBarDetail(bar.barId) != null) {
+                                            fbBarDetailsFragment.setBar(bar);
+                                            fbBarDetailsFragment.setDrinks(drinks);
+                                            fbBarDetailsFragment.setReviews(reviews);
+                                            fbBarDetailsFragment.setBarDetails(barDetails);
+                                            fbBarDetailsFragment.setVoteStat(appRes.getAllTimeVoteStats().get(bar.barId));
+                                            editBarFragment.setBarDetails(barDetails);
+                                            switchToFragment(fbBarDetailsFragment);
+                                        } else {
+                                            barDetailsFragment.refreshData();
+                                            barDetailsFragment.setBar(bar);
+                                            barDetailsFragment.setDrinks(drinks);
+                                            barDetailsFragment.setReviews(reviews);
+                                            barDetailsFragment.setBarDetails(barDetails);
+                                            editBarFragment.setBarDetails(barDetails);
+                                            switchToFragment(barDetailsFragment);
+                                        }
                                     }
                                 });
                             }
@@ -364,16 +458,8 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
             }
 
             @Override
-            public void goToAddEventFragment(Event event) {
-                addEventFragment.setEvent(event);
-                addEventFragment.refreshData();
-                switchToFragment(addEventFragment);
-            }
-
-            @Override
-            public void goToShowLocationFragment(LatLng position, String address) {
-                showLocationFragment.setLatLng(position);
-                showLocationFragment.setTitleText(address);
+            public void goToShowLocationFragment(Bar bar) {
+                showLocationFragment.setBar(bar);
                 switchToFragment(showLocationFragment);
             }
 
@@ -438,12 +524,18 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
             @Override
             public void goToInfoFragment() {
-                switchToFragment(infoFragment);
+                FacebookService.getInstance().getFanCount(new GetFanCountHandler() {
+                    @Override
+                    public void onGetFanCountSuccess(int fanCount) {
+                        infoFragment.setFanCount(fanCount);
+                        switchToFragment(infoFragment);
+                    }
+                });
             }
 
             @Override
-            public void goToMapFragment(Bar bar) {
-                mapFragment.refreshData(bar);
+            public void goToMapFragment(String barName) {
+                mapFragment.refreshData(barName);
                 switchToFragment(mapFragment);
             }
 
@@ -454,12 +546,13 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
             }
 
             @Override
-            public void goToEditBarFragment(final Bar bar) {
+            public void goToEditBarFragment(final Bar bar, final boolean isFacebookBar) {
                 DrinksResource.getInstance().getDrinks(bar.barId, new GetDrinkListHandler() {
                     @Override
                     public void onDrinkListLoaded(ArrayList<Drink> drinks) {
                         editBarFragment.setDrinks(drinks);
                         editBarFragment.setBar(bar);
+                        editBarFragment.setIsFacebookBar(isFacebookBar);
                         switchToFragment(editBarFragment);
                     }
                 });
@@ -486,9 +579,14 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
         editBarFragment.setListener(new EditBarFragment.Listener() {
             @Override
-            public void onDrinksUpdated(ArrayList<Drink> drinks) {
-                barDetailsFragment.setDrinks(drinks);
-                barDetailsFragment.updateDrinks();
+            public void onDrinksUpdated(ArrayList<Drink> drinks, boolean isFacebookBar) {
+                if (isFacebookBar) {
+                    fbBarDetailsFragment.setDrinks(drinks);
+                    fbBarDetailsFragment.updateDrinks();
+                } else {
+                    barDetailsFragment.setDrinks(drinks);
+                    barDetailsFragment.updateDrinks();
+                }
                 editBarFragment.setDrinks(drinks);
                 editBarFragment.updateDrinks();
             }
@@ -526,16 +624,6 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
                 });
             }
         });
-        addEventFragment.setListener(new AddEventFragment.Listener() {
-            @Override
-            public void onEventUpdated(Event event) {
-                appRes.setEvent(event.eventId, event);
-                eventsFragment.refreshData();
-                eventsFragment.update();
-
-                FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshBarsFragment();
-            }
-        });
     }
 
     private void removeAddedFragment() {
@@ -570,13 +658,6 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
     public void openMainApp() {
         removeAddedFragment();
 
-        UsersResource.getInstance().editUser(AppRes.getUser(), new EditSuccessListener() {
-            @Override
-            public void onEditSuccess() {
-                UsersResource.getInstance().updateUserKarma(KarmaPoints.LOGGED_IN, true);
-            }
-        });
-
         Crashlytics.setUserIdentifier(AppRes.getUser().userId);
 
         if (appRes.getIsAdmin() || AppRes.getUser().premium) {
@@ -588,11 +669,35 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
             mAdView.loadAd(adRequest);
         }
 
+        UsersResource.getInstance().editUser(AppRes.getUser(), new EditSuccessListener() {
+            @Override
+            public void onEditSuccess() {
+                UsersResource.getInstance().updateUserKarma(KarmaPoints.LOGGED_IN, true);
+            }
+        });
+
+        // Jos versionimi on uusi ja päivitystä ei ole hylätty, näytetään dialogi
+        if (!BuildConfig.VERSION_NAME.equals(appRes.getCurrentAppVersion()) && !appRes.getCurrentAppVersion().equals(PrefRes.getString(LATEST_APP_VERSION_HANDLED))) {
+            PrefRes.putString(LATEST_APP_VERSION_HANDLED, appRes.getCurrentAppVersion());
+            ConfirmationDialogFragment confirm_dialog = ConfirmationDialogFragment.newInstance(AppRes.getContext().getString(R.string.app_new_version_description));
+            confirm_dialog.show(getSupportFragmentManager(), "päivitä uusin versio dialogi");
+            confirm_dialog.setListener(new ConfirmationDialogFragment.ConfirmationDialogCloseListener() {
+                @Override
+                public void onDialogYesButtonClick() {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(getString(R.string.app_google_play_link)));
+                    startActivity(i);
+                }
+            });
+        }
+
         menu_bottom.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
 
         cityText.setText(AppRes.getCity());
         dateText.setText(StringUtils.getWeekDayText(System.currentTimeMillis()));
+
+        setFacebookLoginHint();
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(eventsFragment);
@@ -639,6 +744,17 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
         // käynnistä service
         Helper.startNotificationService();
+    }
+
+    public void setFacebookLoginHint() {
+        // Näytä facebook hyväksyntäteksti, jos ei ole aiemmin evätty ja jos on baareja jotka eivät salli näkyä
+        ArrayList<String> unsupportedBars = FbRes.getUnsupportedBars();
+        if (!FbRes.isUserLoggedIn() && unsupportedBars.size() > 0 && !PrefRes.getStringSet(FACEBOOK_PERMISSION_DENY_CITIES).contains(AppRes.getCity())) {
+            facebookPermission.setVisibility(View.VISIBLE);
+            unsupportedBarsText.setText(getString(R.string.facebook_description, StringUtils.getUnsupportedBarsText(unsupportedBars)));
+        } else {
+            facebookPermission.setVisibility(View.GONE);
+        }
     }
 
     // Jos sovellus aukaistaan notificaation kautta
@@ -716,6 +832,13 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
     public void goBack(View view) {
         onBackPressed();
+    }
+
+    public void denyFacebookLoginHint(View view) {
+        Set<String> facebookPermissionDenyCities = PrefRes.getStringSet(FACEBOOK_PERMISSION_DENY_CITIES);
+        facebookPermissionDenyCities.add(AppRes.getCity());
+        PrefRes.putStringSet(FACEBOOK_PERMISSION_DENY_CITIES, facebookPermissionDenyCities);
+        facebookPermission.setVisibility(View.GONE);
     }
 
     @Override

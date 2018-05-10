@@ -5,7 +5,7 @@ import com.ardeapps.menomesta.handlers.AddSuccessListener;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetRatingsHandler;
 import com.ardeapps.menomesta.objects.Rating;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class RatingsResource extends FirebaseService {
+public class RatingsResource extends FirebaseDatabaseService {
     private static RatingsResource instance;
     private static DatabaseReference database;
 

@@ -3,21 +3,60 @@ package com.ardeapps.menomesta.utils;
 import android.content.Context;
 import android.location.Location;
 import android.text.format.DateUtils;
+import android.view.View;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.PrefRes;
 import com.ardeapps.menomesta.R;
+import com.ardeapps.menomesta.objects.BarLocation;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+
+import static com.ardeapps.menomesta.PrefRes.FACEBOOK_PERMISSION_DENY_CITIES;
 
 /**
  * Created by Arttu on 4.5.2017.
  */
 public class StringUtils {
+
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d.M.yyyy", Locale.getDefault());
+
+    public static String getUnsupportedBarsText(ArrayList<String> unsupportedBarsList) {
+        Context context = AppRes.getContext();
+        int size = unsupportedBarsList.size();
+        String unsupportedBarsText = "";
+        if (size == 1) {
+            unsupportedBarsText += context.getString(R.string.facebook_description_single, unsupportedBarsList.get(0));
+        } else {
+            String barsString = "";
+            for (int i = 0; i < unsupportedBarsList.size(); i++) {
+                if(i < 3 && unsupportedBarsList.get(i) != null) {
+                    barsString += unsupportedBarsList.get(i);
+                    if (i < size - 1) {
+                        if (i == size - 2) {
+                            barsString += " ja ";
+                        } else {
+                            barsString += ", ";
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+            if (size > 3) {
+                barsString += "...";
+            }
+            unsupportedBarsText += context.getString(R.string.facebook_description_multiple, barsString);
+        }
+        return unsupportedBarsText;
+    }
 
     public static String getRatingText(double rating) {
         DecimalFormatSymbols decimalSymbol = new DecimalFormatSymbols(Locale.getDefault());
@@ -39,18 +78,11 @@ public class StringUtils {
     }
 
     public static boolean isEmptyString(String text) {
-        return text == null || text.equals("");
+        return text == null || text.trim().equals("");
     }
 
     public static boolean areSame(String value1, String value2) {
         return value1 != null && value2 != null && value1.equals(value2);
-    }
-
-    public static String getDateTimeText(long milliseconds, boolean dateNumeric, boolean toLowerCase) {
-        Context context = AppRes.getContext();
-        String dateTimeString = getDateText(milliseconds, dateNumeric, toLowerCase);
-        dateTimeString += " " + context.getString(R.string.clock) + " " + getTimeText(milliseconds);
-        return toLowerCase ? dateTimeString.toLowerCase() : dateTimeString;
     }
 
     public static String getTimeText(long milliseconds) {
@@ -91,88 +123,75 @@ public class StringUtils {
     }
 
     public static String getDateText(long milliseconds) {
-        return new SimpleDateFormat("d.M.yyyy", Locale.getDefault()).format(new Date(milliseconds));
+        return simpleDateFormat.format(new Date(milliseconds));
     }
 
     public static String getDateText(long milliseconds, boolean numeric, boolean lowerCase) {
         if (numeric) {
-            Date date = new Date(milliseconds);
-            SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy", Locale.ENGLISH);
-            return sdf.format(date);
+            return getDateText(milliseconds);
         } else {
             Context context = AppRes.getContext();
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(milliseconds);
-            String dateString = "";
-            String extra = "na";
+            String dateString;
             if (DateUtils.isToday(milliseconds)) {
                 dateString = context.getString(R.string.today);
+            } else if (DateUtil.isDateTomorrow(milliseconds)) {
+                dateString = context.getString(R.string.tomorrow);
             } else if (DateUtil.isOnThisWeek(milliseconds)) {
-                switch (c.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.MONDAY:
-                        dateString = context.getString(R.string.monday) + extra;
-                        break;
-                    case Calendar.TUESDAY:
-                        dateString = context.getString(R.string.tuesday) + extra;
-                        break;
-                    case Calendar.WEDNESDAY:
-                        dateString = context.getString(R.string.wednesday) + extra;
-                        break;
-                    case Calendar.THURSDAY:
-                        dateString = context.getString(R.string.thursday) + extra;
-                        break;
-                    case Calendar.FRIDAY:
-                        dateString = context.getString(R.string.friday) + extra;
-                        break;
-                    case Calendar.SATURDAY:
-                        dateString = context.getString(R.string.saturday) + extra;
-                        break;
-                    case Calendar.SUNDAY:
-                        dateString = context.getString(R.string.sunday) + extra;
-                        break;
-                }
+                int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+                dateString = getWeekDay(dayOfWeek) + "na";
             } else {
                 dateString = c.get(Calendar.DAY_OF_MONTH) + ". ";
-                switch (c.get(Calendar.MONTH)) {
-                    case Calendar.JANUARY:
-                        dateString += context.getString(R.string.january);
-                        break;
-                    case Calendar.FEBRUARY:
-                        dateString += context.getString(R.string.february);
-                        break;
-                    case Calendar.MARCH:
-                        dateString += context.getString(R.string.march);
-                        break;
-                    case Calendar.APRIL:
-                        dateString += context.getString(R.string.april);
-                        break;
-                    case Calendar.MAY:
-                        dateString += context.getString(R.string.may);
-                        break;
-                    case Calendar.JUNE:
-                        dateString += context.getString(R.string.june);
-                        break;
-                    case Calendar.JULY:
-                        dateString += context.getString(R.string.july);
-                        break;
-                    case Calendar.AUGUST:
-                        dateString += context.getString(R.string.august);
-                        break;
-                    case Calendar.SEPTEMBER:
-                        dateString += context.getString(R.string.september);
-                        break;
-                    case Calendar.OCTOBER:
-                        dateString += context.getString(R.string.october);
-                        break;
-                    case Calendar.NOVEMBER:
-                        dateString += context.getString(R.string.november);
-                        break;
-                    case Calendar.DECEMBER:
-                        dateString += context.getString(R.string.december);
-                        break;
+                int month = c.get(Calendar.MONTH);
+                if (month == Calendar.JANUARY) {
+                    dateString += context.getString(R.string.january);
+                } else if (month == Calendar.FEBRUARY) {
+                    dateString += context.getString(R.string.february);
+                } else if (month == Calendar.MARCH) {
+                    dateString += context.getString(R.string.march);
+                } else if (month == Calendar.APRIL) {
+                    dateString += context.getString(R.string.april);
+                } else if (month == Calendar.MAY) {
+                    dateString += context.getString(R.string.may);
+                } else if (month == Calendar.JUNE) {
+                    dateString += context.getString(R.string.june);
+                } else if (month == Calendar.JULY) {
+                    dateString += context.getString(R.string.july);
+                } else if (month == Calendar.AUGUST) {
+                    dateString += context.getString(R.string.august);
+                } else if (month == Calendar.SEPTEMBER) {
+                    dateString += context.getString(R.string.september);
+                } else if (month == Calendar.OCTOBER) {
+                    dateString += context.getString(R.string.october);
+                } else if (month == Calendar.NOVEMBER) {
+                    dateString += context.getString(R.string.november);
+                } else if (month == Calendar.DECEMBER) {
+                    dateString += context.getString(R.string.december);
                 }
             }
             return lowerCase ? dateString.toLowerCase() : dateString;
+        }
+    }
+
+    private static String getWeekDay(int dayOfWeek) {
+        Context context = AppRes.getContext();
+        if (dayOfWeek == Calendar.MONDAY) {
+            return context.getString(R.string.monday);
+        } else if (dayOfWeek == Calendar.TUESDAY) {
+            return context.getString(R.string.tuesday);
+        } else if (dayOfWeek == Calendar.WEDNESDAY) {
+            return context.getString(R.string.wednesday);
+        } else if (dayOfWeek == Calendar.THURSDAY) {
+            return context.getString(R.string.thursday);
+        } else if (dayOfWeek == Calendar.FRIDAY) {
+            return context.getString(R.string.friday);
+        } else if (dayOfWeek == Calendar.SATURDAY) {
+            return context.getString(R.string.saturday);
+        } else if (dayOfWeek == Calendar.SUNDAY) {
+            return context.getString(R.string.sunday);
+        } else {
+            return "";
         }
     }
 
@@ -180,40 +199,22 @@ public class StringUtils {
         Context context = AppRes.getContext();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(milliseconds);
-        String dateText = "";
         int date = cal.get(Calendar.DAY_OF_WEEK);
         if (cal.get(Calendar.HOUR_OF_DAY) < 6) {
             if (date == 1) {
                 date = 7;
             } else date--;
         }
-        switch (date) {
-            case 1:
-                dateText = context.getString(R.string.sunday);
-                break;
-            case 2:
-                dateText = context.getString(R.string.monday);
-                break;
-            case 3:
-                dateText = context.getString(R.string.tuesday);
-                break;
-            case 4:
-                dateText = context.getString(R.string.wednesday);
-                break;
-            case 5:
-                dateText = context.getString(R.string.thursday);
-                break;
-            case 6:
-                dateText = context.getString(R.string.friday);
-                break;
-            case 7:
-                dateText = context.getString(R.string.saturday);
-                break;
-        }
+
+        String dateText = getWeekDay(date);
         if (cal.get(Calendar.HOUR_OF_DAY) < 6) {
             dateText += " " + context.getString(R.string.night);
         }
         return dateText;
+    }
+
+    public static String getDistanceToText(BarLocation barLocation) {
+        return getDistanceToText(barLocation.latitude, barLocation.longitude);
     }
 
     public static String getDistanceToText(double targetLat, double targetLng) {

@@ -14,29 +14,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.handlers.AddSuccessListener;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetRatingStatsHandler;
 import com.ardeapps.menomesta.objects.Bar;
 import com.ardeapps.menomesta.objects.BarDetails;
-import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.Drink;
+import com.ardeapps.menomesta.objects.FacebookBarDetails;
 import com.ardeapps.menomesta.objects.KarmaPoints;
 import com.ardeapps.menomesta.objects.Rating;
 import com.ardeapps.menomesta.objects.RatingStat;
 import com.ardeapps.menomesta.objects.ReportCounts;
+import com.ardeapps.menomesta.objects.Review;
 import com.ardeapps.menomesta.objects.VoteStat;
-import com.ardeapps.menomesta.resources.BarCommentsResource;
 import com.ardeapps.menomesta.resources.RatingStatsResource;
 import com.ardeapps.menomesta.resources.RatingsLogResource;
-import com.ardeapps.menomesta.resources.RatingsResource;
+import com.ardeapps.menomesta.resources.ReviewsResource;
 import com.ardeapps.menomesta.resources.UsersResource;
 import com.ardeapps.menomesta.services.FragmentListeners;
 import com.ardeapps.menomesta.utils.Helper;
+import com.ardeapps.menomesta.utils.Logger;
 import com.ardeapps.menomesta.utils.StringUtils;
-import com.ardeapps.menomesta.views.CommentHolder;
+import com.ardeapps.menomesta.views.GenderBars;
 import com.ardeapps.menomesta.views.IconView;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +48,9 @@ import java.util.Map;
 
 public class BarDetailsFragment extends Fragment {
 
-    LinearLayout commentList;
-    LinearLayout sexLayout;
+    LinearLayout reviewList;
     LinearLayout infoContainer;
-    LinearLayout sexContainer;
-    ArrayList<Comment> barComments;
+    ArrayList<Review> reviews;
     Map<String, VoteStat> allTimeVoteStats = new HashMap<>();
     Map<String, RatingStat> allTimeRatingStats = new HashMap<>();
     ArrayList<Drink> drinks;
@@ -61,11 +62,8 @@ public class BarDetailsFragment extends Fragment {
     TextView title;
     TextView positionAllTime;
     TextView averageAgeText;
-    TextView malePercentText;
-    TextView femalePercentText;
-    TextView commentsText;
-    Button writeCommentButton;
-    Button addRating;
+    TextView reviewsText;
+    Button addReview;
     TextView ageTitleText;
     TextView entranceTitleText;
     Button edit_bar;
@@ -84,10 +82,12 @@ public class BarDetailsFragment extends Fragment {
     LinearLayout ageContainer;
     LinearLayout foodContent;
 
+    GenderBars genderBars;
+
     AppRes appRes;
 
-    public void setBarComments(ArrayList<Comment> barComments) {
-        this.barComments = barComments;
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public void setBar(Bar bar) {
@@ -121,22 +121,17 @@ public class BarDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_bar_details, container, false);
 
-        commentList = (LinearLayout) v.findViewById(R.id.commentList);
-        sexLayout = (LinearLayout) v.findViewById(R.id.sexLayout);
+        reviewList = (LinearLayout) v.findViewById(R.id.reviewList);
         infoContainer = (LinearLayout) v.findViewById(R.id.infoContainer);
-        sexContainer = (LinearLayout) v.findViewById(R.id.sexContainer);
         ratingContent = (LinearLayout) v.findViewById(R.id.ratingContent);
-        edit_bar = (Button) v.findViewById(R.id.edit_bar);
+        edit_bar = (Button) v.findViewById(R.id.editBar);
         ratingText = (TextView) v.findViewById(R.id.ratingText);
         title = (TextView) v.findViewById(R.id.title);
-        writeCommentButton = (Button) v.findViewById(R.id.addComment);
         positionAllTime = (TextView) v.findViewById(R.id.positionAllTime);
         averageAgeText = (TextView) v.findViewById(R.id.averageAge);
-        malePercentText = (TextView) v.findViewById(R.id.malePercent);
-        femalePercentText = (TextView) v.findViewById(R.id.femalePercent);
-        commentsText = (TextView) v.findViewById(R.id.commentsText);
-        addRating = (Button) v.findViewById(R.id.addRating);
-        drinkListView = (LinearLayout) v.findViewById(R.id.drinkListView);
+        reviewsText = (TextView) v.findViewById(R.id.reviewsText);
+        addReview = (Button) v.findViewById(R.id.addReview);
+        drinkListView = (LinearLayout) v.findViewById(R.id.drinksList);
         map_icon = (IconView) v.findViewById(R.id.map_icon);
         barType = (TextView) v.findViewById(R.id.barType);
         distanceText = (TextView) v.findViewById(R.id.distanceText);
@@ -149,106 +144,88 @@ public class BarDetailsFragment extends Fragment {
         emptyMessage = (TextView) v.findViewById(R.id.emptyMessage);
         ageContainer = (LinearLayout) v.findViewById(R.id.ageContainer);
         foodContent = (LinearLayout) v.findViewById(R.id.foodContent);
+        genderBars = (GenderBars) v.findViewById(R.id.genderBars);
+
 
         title.setText(bar.name);
 
         updateBar();
         updateBarDetails();
         updateDrinks();
-        updateCommentList();
+        updateReviews();
         updateStats();
 
-        writeCommentButton.setOnClickListener(new View.OnClickListener() {
+
+        addReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Helper.hasUserSentCommentInMinute(barComments)) {
-                    InfoDialogFragment dialog = InfoDialogFragment.newInstance(getString(R.string.error_comment_title), getString(R.string.error_comment_desc));
-                    dialog.show(getFragmentManager(), "kommentti lähetetty liian nopeasti");
-                } else {
-                    FragmentListeners.getInstance().getFragmentChangeListener().goToWriteCommentFragment(new WriteCommentFragment.Listener() {
-                        @Override
-                        public void onSendClicked(final Comment comment) {
-                            BarCommentsResource.getInstance().addBarComment(bar.barId, comment, new AddSuccessListener() {
-                                @Override
-                                public void onAddSuccess(String id) {
-                                    comment.commentId = id;
-                                    Collections.reverse(barComments);
-                                    barComments = Comment.setComment(barComments, comment.commentId, comment);
-                                    Collections.reverse(barComments);
-                                    updateCommentList();
-                                }
-                            });
-
-                            UsersResource.getInstance().updateUserKarma(KarmaPoints.COMMENTED_BAR, true);
-                        }
-                    });
-                }
-            }
-        });
-
-        addRating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final NewRatingDialogFragment ratingDialog = NewRatingDialogFragment.newInstance(getString(R.string.bar_details_rate) + " " + bar.name);
-                ratingDialog.setListener(new NewRatingDialogFragment.RatingDialogListener() {
+                final AddReviewDialogFragment reviewDialog = new AddReviewDialogFragment();
+                reviewDialog.setBar(bar);
+                reviewDialog.setListener(new AddReviewDialogFragment.RatingDialogListener() {
                     @Override
                     public void onDialogClose() {
-                        ratingDialog.dismiss();
+                        reviewDialog.dismiss();
                     }
 
                     @Override
-                    public void onRatingSubmit(final float value) {
-                        ratingDialog.dismiss();
+                    public void onReviewSubmit(final Review review) {
+                        reviewDialog.dismiss();
 
-                        final Rating rating = new Rating();
-                        rating.barId = bar.barId;
-                        rating.userId = AppRes.getUser().userId;
-                        rating.rating = value;
-                        rating.time = System.currentTimeMillis();
-
-                        if (appRes.getUserRatings().keySet().contains(bar.barId)) {
+                        if (Helper.hasUserAddedReviewToday(reviews)) {
                             InfoDialogFragment ratingFoundDialog = InfoDialogFragment.newInstance(getString(R.string.error_rating_title), getString(R.string.error_rating_desc));
                             ratingFoundDialog.show(getFragmentManager(), "Arvostelu samana päivänä");
                             return;
                         }
 
-                        RatingsResource.getInstance().addRating(bar.barId, rating, new AddSuccessListener() {
+                        ReviewsResource.getInstance().addReview(review.barId, review, new AddSuccessListener() {
                             @Override
                             public void onAddSuccess(String id) {
-                                rating.ratingId = id;
-                                appRes.setRating(bar.barId, rating.ratingId, rating);
+                                review.reviewId = id;
+                                review.user = AppRes.getUser();
+                                Collections.reverse(reviews);
+                                reviews = Review.setReview(reviews, review.reviewId, review);
+                                Collections.reverse(reviews);
+                                updateReviews();
 
-                                RatingStatsResource.getInstance().editRatingStats(value, bar.barId, new GetRatingStatsHandler() {
-                                    @Override
-                                    public void onRatingStatsLoaded(Map<String, RatingStat> ratingStats) {
-                                        appRes.setAllTimeRatingStats(ratingStats);
-                                        FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshBarsFragment();
-                                        refreshData();
-                                        updateStats();
+                                if(review.rating > 0) {
+                                    RatingStatsResource.getInstance().editRatingStats(review.rating, review.barId, new GetRatingStatsHandler() {
+                                        @Override
+                                        public void onRatingStatsLoaded(Map<String, RatingStat> ratingStats) {
+                                            appRes.setAllTimeRatingStats(ratingStats);
+                                            FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshBarsFragment();
+                                            refreshData();
+                                            updateStats();
 
-                                        RatingsLogResource.getInstance().addRatingLog(bar.barId, rating);
-                                        UsersResource.getInstance().updateUserKarma(KarmaPoints.STARS_ADDED, true);
-                                    }
-                                });
+                                            // Lisätään rating lokiin
+                                            final Rating rating = new Rating();
+                                            rating.barId = bar.barId;
+                                            rating.userId = AppRes.getUser().userId;
+                                            rating.rating = review.rating;
+                                            rating.time = System.currentTimeMillis();
+                                            RatingsLogResource.getInstance().addRatingLog(bar.barId, rating);
+                                        }
+                                    });
+                                }
+                                UsersResource.getInstance().updateUserKarma(KarmaPoints.REVIEWED_BAR, true);
                             }
                         });
                     }
                 });
-                ratingDialog.show(getFragmentManager(), "new rating");
+                reviewDialog.show(getFragmentManager(), "Lisää arvostelu");
             }
         });
 
         edit_bar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentListeners.getInstance().getFragmentChangeListener().goToEditBarFragment(bar);
+                FragmentListeners.getInstance().getFragmentChangeListener().goToEditBarFragment(bar, false);
             }
         });
 
         map_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentListeners.getInstance().getFragmentChangeListener().goToMapFragment(bar);
+                FragmentListeners.getInstance().getFragmentChangeListener().goToMapFragment(bar.name);
             }
         });
 
@@ -321,7 +298,7 @@ public class BarDetailsFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(context);
             for (Drink drink : drinks) {
                 if (drink.size != 0 && drink.price != 0) {
-                    View cv = inflater.inflate(R.layout.drink_static_list_item, drinkListView, false);
+                    View cv = inflater.inflate(R.layout.list_item_drink_static, drinkListView, false);
                     holder.name = (TextView) cv.findViewById(R.id.name);
                     holder.size = (TextView) cv.findViewById(R.id.size);
                     holder.price = (TextView) cv.findViewById(R.id.price);
@@ -361,127 +338,146 @@ public class BarDetailsFragment extends Fragment {
             averageAgeText.setVisibility(View.VISIBLE);
             String ageText = getString(R.string.average_age) + " " + getString(R.string.age, String.valueOf(voteStat.getAverageAge()));
             averageAgeText.setText(ageText);
-            sexContainer.setVisibility(View.VISIBLE);
-
-            long malePercent = voteStat.maleCount * 100 / voteStat.voteCount;
-            long femalePercent = 100 - malePercent;
-            malePercentText.setText(getString(R.string.percent, String.valueOf(malePercent)));
-            femalePercentText.setText(getString(R.string.percent, String.valueOf(femalePercent)));
-
-            sexLayout.removeAllViews();
-            View maleBar = new View(getActivity());
-            View femaleBar = new View(getActivity());
-            femaleBar.setBackgroundColor(ContextCompat.getColor(context, R.color.color_female));
-            maleBar.setBackgroundColor(ContextCompat.getColor(context, R.color.color_male));
-            femaleBar.setLayoutParams(new LinearLayout.LayoutParams(0, 50, femalePercent / 100f));
-            maleBar.setLayoutParams(new LinearLayout.LayoutParams(0, 50, malePercent / 100f));
-
-            sexLayout.addView(femaleBar);
-            sexLayout.addView(maleBar);
+            genderBars.setVisibility(View.VISIBLE);
+            genderBars.setView(voteStat, getActivity());
         } else {
             positionAllTime.setVisibility(View.GONE);
             averageAgeText.setVisibility(View.GONE);
-            sexContainer.setVisibility(View.GONE);
+            genderBars.setVisibility(View.GONE);
         }
 
         infoContainer.setVisibility(voteStat != null || ratingStat != null ? View.VISIBLE : View.GONE);
     }
 
-    public void updateCommentList() {
-        if (barComments.size() == 0) {
-            commentsText.setVisibility(View.GONE);
+    public void updateReviews() {
+        reviewList.removeAllViewsInLayout();
+        if (reviews.size() == 0) {
+            reviewsText.setVisibility(View.GONE);
         } else {
-            commentList.removeAllViewsInLayout();
-            commentsText.setVisibility(View.VISIBLE);
-            final CommentHolder holder = new CommentHolder();
+            reviewsText.setVisibility(View.VISIBLE);
+            final ReviewHolder holder = new ReviewHolder();
             LayoutInflater commentInflater = LayoutInflater.from(context);
-            for (final Comment comment : barComments) {
-                View cv = commentInflater.inflate(R.layout.comment_list_item, commentList, false);
-                // set item content in view
-                holder.commentContainer = (LinearLayout) cv.findViewById(R.id.commentContainer);
-                holder.replyContainer = (LinearLayout) cv.findViewById(R.id.replyContainer);
+            for (final Review review : reviews) {
+                View cv = commentInflater.inflate(R.layout.list_item_review, reviewList, false);
+
                 holder.likesText = (TextView) cv.findViewById(R.id.likesText);
-                holder.like_icon = (IconView) cv.findViewById(R.id.like_icon);
-                holder.report_icon = (LinearLayout) cv.findViewById(R.id.report_icon);
-                holder.comment = (TextView) cv.findViewById(R.id.comment);
+                holder.likeIcon = (IconView) cv.findViewById(R.id.likeIcon);
+                holder.reportIcon = (LinearLayout) cv.findViewById(R.id.reportIcon);
                 holder.time = (TextView) cv.findViewById(R.id.time);
+                holder.messageText = (TextView) cv.findViewById(R.id.messageText);
+                holder.ageText = (TextView) cv.findViewById(R.id.ageText);
+                holder.sexIcon = (IconView) cv.findViewById(R.id.sexIcon);
+                holder.ratingText = (TextView) cv.findViewById(R.id.ratingText);
+                holder.ratingContent = (LinearLayout) cv.findViewById(R.id.ratingContent);
 
-                holder.commentContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.color_secondary));
-                holder.replyContainer.setVisibility(View.INVISIBLE);
+                if(review.user != null) {
+                    holder.ageText.setVisibility(View.VISIBLE);
+                    holder.sexIcon.setVisibility(View.VISIBLE);
+                    holder.ageText.setText(StringUtils.getAgeText(review.user.birthday));
+                    if (review.user.isMale()) {
+                        holder.sexIcon.setText(R.string.icon_male);
+                        holder.sexIcon.setTextColor(ContextCompat.getColor(AppRes.getContext(), R.color.color_male));
+                    } else {
+                        holder.sexIcon.setText(R.string.icon_female);
+                        holder.sexIcon.setTextColor(ContextCompat.getColor(AppRes.getContext(), R.color.color_female));
+                    }
+                } else {
+                    holder.ageText.setVisibility(View.GONE);
+                    holder.sexIcon.setVisibility(View.GONE);
+                }
 
-                if (comment.usersVoted != null)
-                    holder.likesText.setText(String.valueOf(comment.usersVoted.size()));
+                holder.ratingContent.setVisibility(review.rating > 0 ? View.VISIBLE : View.GONE);
+                holder.ratingText.setText(String.valueOf(Math.round(review.rating)));
+
+                if (review.usersVoted != null)
+                    holder.likesText.setText(String.valueOf(review.usersVoted.size()));
                 else
                     holder.likesText.setText("0");
 
-                holder.comment.setText(comment.message);
+                holder.messageText.setText(review.message);
 
-                holder.time.setText(StringUtils.getDateText(comment.time));
+                holder.time.setText(StringUtils.getDateText(review.time));
 
-                if (comment.usersVoted != null && comment.usersVoted.contains(AppRes.getUser().userId)) {
-                    holder.like_icon.setAlpha(0.2f);
-                    holder.like_icon.setOnClickListener(null);
+                if (review.usersVoted != null && review.usersVoted.contains(AppRes.getUser().userId)) {
+                    holder.likeIcon.setAlpha(0.2f);
+                    holder.likeIcon.setOnClickListener(null);
                 } else {
-                    holder.like_icon.setAlpha(1f);
-                    holder.like_icon.setOnClickListener(new View.OnClickListener() {
+                    holder.likeIcon.setAlpha(1f);
+                    holder.likeIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            final Comment commentToSave = comment.clone();
-                            commentToSave.usersVoted.add(AppRes.getUser().userId);
-                            BarCommentsResource.getInstance().editBarComment(bar.barId, commentToSave, new EditSuccessListener() {
+                            final Review reviewToSave = review.clone();
+                            reviewToSave.usersVoted.add(AppRes.getUser().userId);
+                            ReviewsResource.getInstance().editReview(review.barId, reviewToSave, new EditSuccessListener() {
                                 @Override
                                 public void onEditSuccess() {
-                                    barComments = Comment.setComment(barComments, commentToSave.commentId, commentToSave);
-                                    updateCommentList();
+                                    reviews = Review.setReview(reviews, reviewToSave.reviewId, reviewToSave);
+                                    updateReviews();
 
-                                    UsersResource.getInstance().giveUserKarma(commentToSave.userId, KarmaPoints.COMMENT_LIKED, true);
+                                    UsersResource.getInstance().giveUserKarma(reviewToSave.userId, KarmaPoints.COMMENT_LIKED, true);
                                 }
                             });
                         }
                     });
                 }
 
-                holder.report_icon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (comment.usersReported != null && comment.usersReported.contains(AppRes.getUser().userId)) {
-                            InfoDialogFragment reportDialog = InfoDialogFragment.newInstance(getString(R.string.not_participated_title), getString(R.string.confirmation_report_error_desc_comment));
-                            reportDialog.show(getFragmentManager(), "olet jo raportoinut tästä");
-                        } else {
-                            ConfirmationDialogFragment confirm_dialog = ConfirmationDialogFragment.newInstance(getString(R.string.confirmation_report_comment));
-                            confirm_dialog.show(getFragmentManager(), "flägää dialogi");
-                            confirm_dialog.setListener(new ConfirmationDialogFragment.ConfirmationDialogCloseListener() {
-                                @Override
-                                public void onDialogYesButtonClick() {
-                                    final Comment commentToSave = comment.clone();
-                                    commentToSave.usersReported.add(AppRes.getUser().userId);
-                                    if (commentToSave.usersReported.size() >= ReportCounts.REPORTS_TO_DELETE_BAR_COMMENT) {
-                                        BarCommentsResource.getInstance().removeBarComment(bar.barId, commentToSave.commentId, new EditSuccessListener() {
-                                            @Override
-                                            public void onEditSuccess() {
-                                                barComments = Comment.setComment(barComments, commentToSave.commentId, null);
-                                                updateCommentList();
-                                            }
-                                        });
-                                    } else {
-                                        BarCommentsResource.getInstance().editBarComment(bar.barId, commentToSave, new EditSuccessListener() {
-                                            @Override
-                                            public void onEditSuccess() {
-                                                barComments = Comment.setComment(barComments, commentToSave.commentId, commentToSave);
-                                                updateCommentList();
-                                            }
-                                        });
+                if(StringUtils.isEmptyString(review.message)) {
+                    holder.reportIcon.setVisibility(View.GONE);
+                } else {
+                    holder.reportIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (review.usersReported != null && review.usersReported.contains(AppRes.getUser().userId)) {
+                                InfoDialogFragment reportDialog = InfoDialogFragment.newInstance(getString(R.string.not_participated_title), getString(R.string.confirmation_report_error_desc_comment));
+                                reportDialog.show(getFragmentManager(), "olet jo raportoinut tästä");
+                            } else {
+                                ConfirmationDialogFragment confirm_dialog = ConfirmationDialogFragment.newInstance(getString(R.string.confirmation_report_comment));
+                                confirm_dialog.show(getFragmentManager(), "flägää dialogi");
+                                confirm_dialog.setListener(new ConfirmationDialogFragment.ConfirmationDialogCloseListener() {
+                                    @Override
+                                    public void onDialogYesButtonClick() {
+                                        final Review reviewToSave = review.clone();
+                                        reviewToSave.usersReported.add(AppRes.getUser().userId);
+                                        if (reviewToSave.usersReported.size() >= ReportCounts.REPORTS_TO_DELETE_REVIEW) {
+                                            ReviewsResource.getInstance().removeReview(review.barId, reviewToSave.reviewId, new EditSuccessListener() {
+                                                @Override
+                                                public void onEditSuccess() {
+                                                    reviews = Review.setReview(reviews, reviewToSave.reviewId, null);
+                                                    updateReviews();
+                                                }
+                                            });
+                                        } else {
+                                            ReviewsResource.getInstance().editReview(review.barId, reviewToSave, new EditSuccessListener() {
+                                                @Override
+                                                public void onEditSuccess() {
+                                                    reviews = Review.setReview(reviews, reviewToSave.reviewId, reviewToSave);
+                                                    updateReviews();
+                                                }
+                                            });
+                                        }
+                                        UsersResource.getInstance().giveUserKarma(reviewToSave.userId, KarmaPoints.COMMENT_REPORTED, false);
                                     }
-                                    UsersResource.getInstance().giveUserKarma(commentToSave.userId, KarmaPoints.COMMENT_REPORTED, false);
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
-                commentList.addView(cv);
+                reviewList.addView(cv);
             }
         }
+    }
+
+    public class ReviewHolder {
+        public TextView likesText;
+        public TextView time;
+        public IconView likeIcon;
+        public LinearLayout reportIcon;
+        public TextView messageText;
+        public TextView ageText;
+        public IconView sexIcon;
+        public TextView ratingText;
+        public LinearLayout ratingContent;
     }
 
     public class PriceHolder {

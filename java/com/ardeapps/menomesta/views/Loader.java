@@ -15,13 +15,24 @@ public class Loader {
     private static RelativeLayout loaderContainer;
     private static ImageView loader_spinner;
     private static boolean loaderVisible = false;
+    private static boolean showPermanent = false;
 
     public static void create(RelativeLayout loaderView, ImageView loader_spinnerView) {
         loaderContainer = loaderView;
         loader_spinner = loader_spinnerView;
     }
 
-    public static void show() {
+    public static void showPermanent() {
+        showPermanent = true;
+        showAnimation();
+    }
+
+    public static void hidePermanent() {
+        showPermanent = false;
+        hideAnimation();
+    }
+
+    private static void showAnimation() {
         loaderVisible = true;
         Animation rotation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotation.setDuration(5000);
@@ -41,11 +52,23 @@ public class Loader {
         });
     }
 
-    public static void hide() {
+    private static void hideAnimation() {
         loaderVisible = false;
         loaderContainer.setVisibility(View.INVISIBLE);
         loader_spinner.setVisibility(View.INVISIBLE);
         loader_spinner.clearAnimation();
+    }
+
+    public static void show() {
+        if(!showPermanent) {
+            showAnimation();
+        }
+    }
+
+    public static void hide() {
+        if(!showPermanent) {
+            hideAnimation();
+        }
     }
 
     public static boolean isVisible() {

@@ -14,15 +14,10 @@ public class Bar {
     public double latitude;
     public double longitude;
     public boolean isFoodPlace;
+    public String facebookId;
 
     public Bar() {
         // Default constructor required for calls to DataSnapshot.getValue(Bar.class)
-    }
-
-    public Bar(String name, String address, boolean nightClub) {
-        this.name = name;
-        this.address = address;
-        this.nightClub = nightClub;
     }
 
     @Exclude
@@ -36,6 +31,7 @@ public class Bar {
         clone.latitude = this.latitude;
         clone.longitude = this.longitude;
         clone.isFoodPlace = this.isFoodPlace;
+        clone.facebookId = this.facebookId;
         return clone;
     }
 }

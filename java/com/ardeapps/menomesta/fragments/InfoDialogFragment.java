@@ -49,7 +49,7 @@ public class InfoDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.info_dialog, container);
+        View v = inflater.inflate(R.layout.dialog_info, container);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);

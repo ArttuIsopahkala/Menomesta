@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.adapters.DrinkListAdapter;
 import com.ardeapps.menomesta.handlers.AddSuccessListener;
@@ -37,6 +39,8 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
     Listener mListener = null;
     ArrayList<Drink> drinks;
     Bar bar;
+
+    RelativeLayout detailsContent;
     ListView drinkListView;
     TextView addDrink;
     TextView titleText;
@@ -58,6 +62,7 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
     DrinkHolder longDrinkHolder;
     View beerItem;
     View longDrinkItem;
+    boolean isFacebookBar;
     AppRes appRes = (AppRes) AppRes.getContext();
 
     public void setListener(Listener l) {
@@ -76,11 +81,16 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
         this.barDetails = barDetails;
     }
 
+    public void setIsFacebookBar(boolean isFacebookBar) {
+        this.isFacebookBar = isFacebookBar;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_bar, container, false);
 
+        detailsContent = (RelativeLayout) v.findViewById(R.id.detailsContent);
         beerItem = v.findViewById(R.id.beerItem);
         beerHolder = new DrinkHolder();
         beerHolder.nameText = (TextView) beerItem.findViewById(R.id.name);
@@ -97,7 +107,7 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
         longDrinkHolder.updatedText = (TextView) longDrinkItem.findViewById(R.id.updated);
         longDrinkHolder.edit_icon = (IconView) longDrinkItem.findViewById(R.id.edit_icon);
 
-        drinkListView = (ListView) v.findViewById(R.id.drinkListView);
+        drinkListView = (ListView) v.findViewById(R.id.drinksList);
         titleText = (TextView) v.findViewById(R.id.title);
         addDrink = (TextView) v.findViewById(R.id.addDrink);
         edit_icon_age_friday = (IconView) v.findViewById(R.id.edit_icon_age_friday);
@@ -112,45 +122,67 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
         detailsListHeader = (LinearLayout) v.findViewById(R.id.detailsListHeader);
         food_checkBox = (CheckBox) v.findViewById(R.id.food_checkBox);
 
-        titleText.setText(bar.name);
+        titleText.setText(FbRes.getBarDetail(bar.barId) != null ? FbRes.getBarDetail(bar.barId).name : bar.name);
         food_checkBox.setChecked(bar.isFoodPlace);
 
-        updateBarDetails();
+        if(isFacebookBar) {
+            detailsContent.setVisibility(View.GONE);
+        } else {
+            detailsContent.setVisibility(View.VISIBLE);
+            updateBarDetails();
+            edit_icon_age_friday.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    valueDialog = new AddValueDialogFragment();
+                    valueDialog.setBarDetails(barDetails);
+                    valueDialog.setEditType(AddValueDialogFragment.EditType.AGE_FRIDAY);
+                    valueDialog.show(getFragmentManager(), "Arvon muokkaus");
+                    valueDialog.setListener(EditBarFragment.this);
+                }
+            });
+
+            edit_icon_age_saturday.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    valueDialog = new AddValueDialogFragment();
+                    valueDialog.setBarDetails(barDetails);
+                    valueDialog.setEditType(AddValueDialogFragment.EditType.AGE_SATURDAY);
+                    valueDialog.show(getFragmentManager(), "Arvon muokkaus");
+                    valueDialog.setListener(EditBarFragment.this);
+                }
+            });
+
+            edit_icon_entrance.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    valueDialog = new AddValueDialogFragment();
+                    valueDialog.setBarDetails(barDetails);
+                    valueDialog.setEditType(AddValueDialogFragment.EditType.ENTRANCE);
+                    valueDialog.show(getFragmentManager(), "Arvon muokkaus");
+                    valueDialog.setListener(EditBarFragment.this);
+                }
+            });
+            food_checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Bar barToSave = bar.clone();
+                    barToSave.isFoodPlace = ((CheckBox) v).isChecked();
+
+                    BarsResource.getInstance().editBar(barToSave, new EditSuccessListener() {
+                        @Override
+                        public void onEditSuccess() {
+                            appRes.setBar(barToSave.barId, barToSave);
+                            bar = barToSave;
+
+                            updateBarDetails();
+                            mListener.onBarUpdated(barToSave);
+                        }
+                    });
+                }
+            });
+        }
+
         updateDrinks();
-
-        edit_icon_age_friday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                valueDialog = new AddValueDialogFragment();
-                valueDialog.setBarDetails(barDetails);
-                valueDialog.setEditType(AddValueDialogFragment.EditType.AGE_FRIDAY);
-                valueDialog.show(getFragmentManager(), "Arvon muokkaus");
-                valueDialog.setListener(EditBarFragment.this);
-            }
-        });
-
-        edit_icon_age_saturday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                valueDialog = new AddValueDialogFragment();
-                valueDialog.setBarDetails(barDetails);
-                valueDialog.setEditType(AddValueDialogFragment.EditType.AGE_SATURDAY);
-                valueDialog.show(getFragmentManager(), "Arvon muokkaus");
-                valueDialog.setListener(EditBarFragment.this);
-            }
-        });
-
-        edit_icon_entrance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                valueDialog = new AddValueDialogFragment();
-                valueDialog.setBarDetails(barDetails);
-                valueDialog.setEditType(AddValueDialogFragment.EditType.ENTRANCE);
-                valueDialog.show(getFragmentManager(), "Arvon muokkaus");
-                valueDialog.setListener(EditBarFragment.this);
-            }
-        });
-
         addDrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,25 +190,6 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
                 drinkDialog.setDrink(null);
                 drinkDialog.show(getFragmentManager(), "Juoman muokkaus");
                 drinkDialog.setListener(EditBarFragment.this);
-            }
-        });
-
-        food_checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Bar barToSave = bar.clone();
-                barToSave.isFoodPlace = ((CheckBox) v).isChecked();
-
-                BarsResource.getInstance().editBar(barToSave, new EditSuccessListener() {
-                    @Override
-                    public void onEditSuccess() {
-                        appRes.setBar(barToSave.barId, barToSave);
-                        bar = barToSave;
-
-                        updateBarDetails();
-                        mListener.onBarUpdated(barToSave);
-                    }
-                });
             }
         });
 
@@ -287,7 +300,7 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
                 drinks = Drink.setDrink(drinks, drink.drinkId, drink);
                 updateDrinks();
 
-                mListener.onDrinksUpdated(drinks);
+                mListener.onDrinksUpdated(drinks, isFacebookBar);
                 UsersResource.getInstance().updateUserKarma(KarmaPoints.DRINK_UPDATED, true);
             }
         });
@@ -312,7 +325,7 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
 
                 updateDrinks();
 
-                mListener.onDrinksUpdated(drinks);
+                mListener.onDrinksUpdated(drinks, isFacebookBar);
                 UsersResource.getInstance().updateUserKarma(KarmaPoints.DRINK_ADDED, true);
             }
         });
@@ -353,7 +366,7 @@ public class EditBarFragment extends Fragment implements AddDrinkDialogFragment.
     }
 
     public interface Listener {
-        void onDrinksUpdated(ArrayList<Drink> drinks);
+        void onDrinksUpdated(ArrayList<Drink> drinks, boolean isFacebookBar);
 
         void onBarDetailsUpdated(BarDetails barDetails);
 

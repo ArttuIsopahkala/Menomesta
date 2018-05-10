@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_secondary"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:baselineAligned="false">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ratingContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/ratingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.7"
+                android:textColor="@color/color_text_light"
+                android:textSize="14sp" />
+            <com.ardeapps.menomesta.views.IconView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:text="@string/icon_star"
+                app:iconColor="@color/color_star"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="12sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:text="tässä on kommentti"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/color_text_light"
+            android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.5"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/icon_clock"
+                    app:iconFont="@string/icon_light"
+                    app:iconSize="14sp" />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
+                    android:text="10vrk"
+                    android:textColor="@color/color_text_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/reportIcon"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal">
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/icon_dots"
+                    app:iconFont="@string/icon_solid"
+                    app:iconSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical">
+                <com.ardeapps.menomesta.views.IconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/sexIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/icon_male"
+                    app:iconColor="@color/color_male"
+                    app:iconFont="@string/icon_solid"
+                    app:iconSize="14sp" />
+                <TextView
+                    android:id="@+id/ageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:text="24v"
+                    android:textColor="@color/color_text_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/info_line_left"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.ardeapps.menomesta.views.IconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/likeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_arrow_up"
+                app:iconFont="@string/icon_solid"
+                app:iconSize="25sp" />
+            <TextView
+                android:id="@+id/likesText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="0"
+                android:textColor="@color/color_text_light"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

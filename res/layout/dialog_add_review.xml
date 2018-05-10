@@ -19,7 +19,7 @@
         android:textStyle="bold"
         android:textColor="@color/color_text_light"/>
     <RatingBar
-        android:id="@+id/rating"
+        android:id="@+id/ratingBar"
         android:layout_centerInParent="true"
         android:layout_below="@+id/title"
         android:layout_width="wrap_content"
@@ -29,12 +29,22 @@
         android:progressTint="@color/color_star"
         android:secondaryProgressTint="@android:color/transparent"
         android:numStars="5"
-        android:stepSize="0.5"/>
+        android:stepSize="1"/>
+    <EditText
+        android:id="@+id/reviewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:inputType="textCapSentences"
+        android:maxLength="250"
+        android:textColor="@color/color_text_light_secondary" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/rating"
+        android:layout_below="@+id/reviewText"
         android:layout_marginTop="10dp" >
         <Button
             android:layout_width="wrap_content"

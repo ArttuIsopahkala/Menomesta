@@ -5,7 +5,7 @@ import com.ardeapps.menomesta.handlers.AddSuccessListener;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetBarCommentsHandler;
 import com.ardeapps.menomesta.objects.Comment;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by Arttu on 19.1.2018.
  */
 
-public class BarCommentsResource extends FirebaseService {
+public class BarCommentsResource extends FirebaseDatabaseService {
     private static BarCommentsResource instance;
     private static DatabaseReference database;
 

@@ -5,7 +5,7 @@ import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetBarHandler;
 import com.ardeapps.menomesta.handlers.GetBarsHandler;
 import com.ardeapps.menomesta.objects.Bar;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class BarsResource extends FirebaseService {
+public class BarsResource extends FirebaseDatabaseService {
     private static BarsResource instance;
     private static DatabaseReference database;
 

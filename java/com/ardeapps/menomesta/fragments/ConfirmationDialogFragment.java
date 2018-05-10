@@ -51,7 +51,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.confirmation_dialog, container);
+        View v = inflater.inflate(R.layout.dialog_confirmation, container);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);

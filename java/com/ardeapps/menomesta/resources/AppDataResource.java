@@ -3,7 +3,7 @@ package com.ardeapps.menomesta.resources;
 import com.ardeapps.menomesta.handlers.GetAppDataHandler;
 import com.ardeapps.menomesta.objects.KarmaPoints;
 import com.ardeapps.menomesta.objects.ReportCounts;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -11,7 +11,7 @@ import com.google.firebase.database.DatabaseReference;
  * Created by Arttu on 19.1.2018.
  */
 
-public class AppDataResource extends FirebaseService {
+public class AppDataResource extends FirebaseDatabaseService {
     private static AppDataResource instance;
     private static DatabaseReference database;
 
@@ -27,41 +27,38 @@ public class AppDataResource extends FirebaseService {
      * Get app data and set it to application.
      */
     public void getAppData(final GetAppDataHandler handler) {
-        getData(database.child(KARMA_POINTS), new GetDataSuccessListener() {
+        getData(database, new GetDataSuccessListener() {
             @Override
             public void onGetDataSuccess(DataSnapshot dataSnapshot) {
-                KarmaPoints.VOTED = (long) dataSnapshot.child("VOTED").getValue();
-                KarmaPoints.LOGGED_IN = (long) dataSnapshot.child("LOGGED_IN").getValue();
-                KarmaPoints.COMMENTED_CITY = (long) dataSnapshot.child("COMMENTED_CITY").getValue();
-                KarmaPoints.COMMENTED_REPLY = (long) dataSnapshot.child("COMMENTED_REPLY").getValue();
-                KarmaPoints.COMMENTED_BAR = (long) dataSnapshot.child("COMMENTED_BAR").getValue();
-                KarmaPoints.STARS_ADDED = (long) dataSnapshot.child("STARS_ADDED").getValue();
-                KarmaPoints.LOGGED_IN = (long) dataSnapshot.child("LOGGED_IN").getValue();
-                KarmaPoints.DRINK_ADDED = (long) dataSnapshot.child("DRINK_ADDED").getValue();
-                KarmaPoints.DRINK_UPDATED = (long) dataSnapshot.child("DRINK_UPDATED").getValue();
-                KarmaPoints.DETAILS_UPDATED = (long) dataSnapshot.child("DETAILS_UPDATED").getValue();
-                KarmaPoints.BEER_BUTTON_PRESSED = (long) dataSnapshot.child("BEER_BUTTON_PRESSED").getValue();
-                KarmaPoints.APP_RATED = (long) dataSnapshot.child("APP_RATED").getValue();
-                KarmaPoints.FACEBOOK_LIKED = (long) dataSnapshot.child("FACEBOOK_LIKED").getValue();
-                KarmaPoints.FEEDBACK_GAVE = (long) dataSnapshot.child("FEEDBACK_GAVE").getValue();
-                KarmaPoints.POINTS_TO_PREMIUM = (long) dataSnapshot.child("POINTS_TO_PREMIUM").getValue();
-                KarmaPoints.COMMENT_LIKED = (long) dataSnapshot.child("COMMENT_LIKED").getValue();
-                KarmaPoints.COMMENT_REPORTED = (long) dataSnapshot.child("COMMENT_REPORTED").getValue();
-                KarmaPoints.PERCENT_TO_BELONG_PREMIUM = (long) dataSnapshot.child("PERCENT_TO_BELONG_PREMIUM").getValue();
-                KarmaPoints.EVENT_ADDED = (long) dataSnapshot.child("EVENT_ADDED").getValue();
-                KarmaPoints.EVENT_REPORTED = (long) dataSnapshot.child("EVENT_REPORTED").getValue();
-                KarmaPoints.CODE_TO_PREMIUM = (String) dataSnapshot.child("CODE_TO_PREMIUM").getValue();
+                DataSnapshot karmaPoints = dataSnapshot.child(KARMA_POINTS);
+                KarmaPoints.VOTED = (long) karmaPoints.child("VOTED").getValue();
+                KarmaPoints.LOGGED_IN = (long) karmaPoints.child("LOGGED_IN").getValue();
+                KarmaPoints.COMMENTED_CITY = (long) karmaPoints.child("COMMENTED_CITY").getValue();
+                KarmaPoints.COMMENTED_REPLY = (long) karmaPoints.child("COMMENTED_REPLY").getValue();
+                KarmaPoints.STARS_ADDED = (long) karmaPoints.child("STARS_ADDED").getValue();
+                KarmaPoints.LOGGED_IN = (long) karmaPoints.child("LOGGED_IN").getValue();
+                KarmaPoints.DRINK_ADDED = (long) karmaPoints.child("DRINK_ADDED").getValue();
+                KarmaPoints.DRINK_UPDATED = (long) karmaPoints.child("DRINK_UPDATED").getValue();
+                KarmaPoints.DETAILS_UPDATED = (long) karmaPoints.child("DETAILS_UPDATED").getValue();
+                KarmaPoints.BEER_BUTTON_PRESSED = (long) karmaPoints.child("BEER_BUTTON_PRESSED").getValue();
+                KarmaPoints.APP_RATED = (long) karmaPoints.child("APP_RATED").getValue();
+                KarmaPoints.FACEBOOK_LIKED = (long) karmaPoints.child("FACEBOOK_LIKED").getValue();
+                KarmaPoints.FEEDBACK_GAVE = (long) karmaPoints.child("FEEDBACK_GAVE").getValue();
+                KarmaPoints.POINTS_TO_PREMIUM = (long) karmaPoints.child("POINTS_TO_PREMIUM").getValue();
+                KarmaPoints.COMMENT_LIKED = (long) karmaPoints.child("COMMENT_LIKED").getValue();
+                KarmaPoints.COMMENT_REPORTED = (long) karmaPoints.child("COMMENT_REPORTED").getValue();
+                KarmaPoints.PERCENT_TO_BELONG_PREMIUM = (long) karmaPoints.child("PERCENT_TO_BELONG_PREMIUM").getValue();
+                KarmaPoints.REVIEWED_BAR = (long) karmaPoints.child("REVIEWED_BAR").getValue();
+                KarmaPoints.CODE_TO_PREMIUM = (String) karmaPoints.child("CODE_TO_PREMIUM").getValue();
 
-                getData(database.child(REPORT_COUNTS), new GetDataSuccessListener() {
-                    @Override
-                    public void onGetDataSuccess(DataSnapshot dataSnapshot) {
-                        ReportCounts.REPORTS_TO_DELETE_COMMENT = (long) dataSnapshot.child("REPORTS_TO_DELETE_COMMENT").getValue();
-                        ReportCounts.REPORTS_TO_DELETE_REPLY = (long) dataSnapshot.child("REPORTS_TO_DELETE_REPLY").getValue();
-                        ReportCounts.REPORTS_TO_DELETE_BAR_COMMENT = (long) dataSnapshot.child("REPORTS_TO_DELETE_BAR_COMMENT").getValue();
-                        ReportCounts.REPORTS_TO_DELETE_EVENT = (long) dataSnapshot.child("REPORTS_TO_DELETE_EVENT").getValue();
-                        handler.onAppDataLoaded();
-                    }
-                });
+                DataSnapshot reportCounts = dataSnapshot.child(REPORT_COUNTS);
+                ReportCounts.REPORTS_TO_DELETE_COMMENT = (long) reportCounts.child("REPORTS_TO_DELETE_COMMENT").getValue();
+                ReportCounts.REPORTS_TO_DELETE_REPLY = (long) reportCounts.child("REPORTS_TO_DELETE_REPLY").getValue();
+                ReportCounts.REPORTS_TO_DELETE_REVIEW = (long) reportCounts.child("REPORTS_TO_DELETE_REVIEW").getValue();
+
+                String facebookAppToken = (String) dataSnapshot.child("FACEBOOK_APP_TOKEN").getValue();
+                String currentAppVersion = (String) dataSnapshot.child("CURRENT_APP_VERSION").getValue();
+                handler.onAppDataLoaded(facebookAppToken, currentAppVersion);
             }
         });
     }

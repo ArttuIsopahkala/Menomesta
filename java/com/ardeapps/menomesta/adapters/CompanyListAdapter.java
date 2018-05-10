@@ -62,7 +62,7 @@ public class CompanyListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Holder holder = new Holder();
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.company_list_item, null);
+            convertView = inflater.inflate(R.layout.list_item_company, null);
         }
         holder.ageText = (TextView) convertView.findViewById(R.id.ageText);
         holder.sex_icon = (IconView) convertView.findViewById(R.id.sex_icon);

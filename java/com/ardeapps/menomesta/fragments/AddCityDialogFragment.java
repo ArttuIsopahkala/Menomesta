@@ -25,7 +25,7 @@ import com.ardeapps.menomesta.utils.StringUtils;
 /**
  * Created by Arttu on 29.11.2015.
  */
-public class NewCityDialogFragment extends DialogFragment {
+public class AddCityDialogFragment extends DialogFragment {
 
     EditText cityText;
     TextView info_text;
@@ -36,7 +36,7 @@ public class NewCityDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.add_item_dialog, container);
+        View v = inflater.inflate(R.layout.dialog_add_city, container);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);

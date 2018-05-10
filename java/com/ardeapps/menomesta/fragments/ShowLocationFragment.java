@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.R;
+import com.ardeapps.menomesta.objects.Bar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,16 +30,12 @@ public class ShowLocationFragment extends Fragment {
     MapView mMapView;
     LinearLayout showClosest;
     TextView titleText;
-    String title;
-    LatLng position;
+    Bar bar;
     private GoogleMap googleMap;
 
-    public void setTitleText(String title) {
-        this.title = title;
-    }
 
-    public void setLatLng(LatLng position) {
-        this.position = position;
+    public void setBar(Bar bar) {
+        this.bar = bar;
     }
 
     @SuppressWarnings("unchecked")
@@ -56,7 +54,7 @@ public class ShowLocationFragment extends Fragment {
         showClosest = (LinearLayout) v.findViewById(R.id.showClosest);
         showClosest.setVisibility(View.GONE);
 
-        titleText.setText(title);
+        titleText.setText(FbRes.getBarDetail(bar.barId) != null ? FbRes.getBarDetail(bar.barId).name : bar.name);
 
         mMapView.onCreate(savedInstanceState);
 
@@ -78,6 +76,8 @@ public class ShowLocationFragment extends Fragment {
                 if (locationPermissionGranted) {
                     googleMap.setMyLocationEnabled(true);
                 }
+
+                LatLng position = new LatLng(bar.latitude, bar.longitude);
 
                 googleMap.addMarker(new MarkerOptions().position(position));
 

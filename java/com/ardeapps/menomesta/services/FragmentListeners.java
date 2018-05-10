@@ -18,7 +18,6 @@ public class FragmentListeners {
     public final static int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
     private static FragmentListeners instance;
     private PermissionHandledListener permissionHandledListener;
-    private FragmentRefreshListener fragmentRefreshListener;
     private FragmentChangeListener fragmentChangeListener;
     private PageAdapterRefreshListener pageAdapterRefreshListener;
 
@@ -53,64 +52,32 @@ public class FragmentListeners {
         this.permissionHandledListener = permissionHandledListener;
     }
 
-    public FragmentRefreshListener getFragmentRefreshListener() {
-        return fragmentRefreshListener;
-    }
-
-    public void setFragmentRefreshListener(FragmentRefreshListener fragmentRefreshListener) {
-        this.fragmentRefreshListener = fragmentRefreshListener;
-    }
-
     public interface PageAdapterRefreshListener {
+        void refreshMainActivity();
         void refreshEventsFragment();
-
         void refreshBarsFragment();
-
         void refreshChatFragment();
     }
 
     public interface FragmentChangeListener {
         void goToWelcomeFragment();
-
         void goToLoaderFragment();
-
         void goToReplyFragment(Comment comment);
-
         void goToBarDetailsFragment(Bar bar);
-
-        void goToAddEventFragment(Event event);
-
-        void goToShowLocationFragment(LatLng position, String address);
-
+        void goToShowLocationFragment(Bar bar);
         void goToPrivateFragment(User recipient, String sessionId, ArrayList<Comment> messages);
-
         void goToProfileFragment();
-
         void goToStatisticsFragment();
-
         void goToCompanyFragment();
-
         void goToInfoFragment();
-
-        void goToMapFragment(Bar bar);
-
+        void goToMapFragment(String barName);
         void goToBarRequestFragment();
-
-        void goToEditBarFragment(Bar bar);
-
+        void goToEditBarFragment(Bar bar, boolean isFacebookBar);
         void goToWriteCommentFragment(WriteCommentFragment.Listener listener);
     }
 
     public interface PermissionHandledListener {
         void onPermissionGranted(int MY_PERMISSION);
         void onPermissionDenied(int MY_PERMISSION);
-    }
-
-    public interface FragmentRefreshListener {
-        void onRefreshBarChat();
-        void onRefreshStats();
-        void onRefreshDrinks();
-        void onRefreshBarDetails();
-        void onRefreshBar();
     }
 }

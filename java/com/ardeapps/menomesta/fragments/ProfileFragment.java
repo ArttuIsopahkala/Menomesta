@@ -1,5 +1,7 @@
 package com.ardeapps.menomesta.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -15,12 +18,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ardeapps.menomesta.AppRes;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.PrefRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
+import com.ardeapps.menomesta.handlers.FacebookLoginHandler;
 import com.ardeapps.menomesta.objects.User;
 import com.ardeapps.menomesta.resources.UsersLookingForCompanyResource;
 import com.ardeapps.menomesta.resources.UsersResource;
+import com.ardeapps.menomesta.services.FacebookService;
+import com.ardeapps.menomesta.services.FirebaseAuthService;
 import com.ardeapps.menomesta.services.FragmentListeners;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.ardeapps.menomesta.utils.Helper;
@@ -28,6 +35,9 @@ import com.ardeapps.menomesta.utils.Logger;
 import com.ardeapps.menomesta.views.BirthdayPicker;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +68,8 @@ public class ProfileFragment extends Fragment {
     Switch vibrate_switch;
     TextView karmaText;
     LinearLayout cityContent;
+    Button loginButton;
+    Button deleteButton;
 
     // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
     LinearLayout notificationPrivateContent;
@@ -80,7 +92,7 @@ public class ProfileFragment extends Fragment {
 
         maleRadioButton = (RadioButton) v.findViewById(R.id.radioMan);
         femaleRadioButton = (RadioButton) v.findViewById(R.id.radioWoman);
-        birthdayPicker = (BirthdayPicker) v.findViewById(R.id.birthday_picker);
+        birthdayPicker = (BirthdayPicker) v.findViewById(R.id.birthdayPicker);
         saveButton = (Button) v.findViewById(R.id.saveButton);
         citySpinner = (Spinner) v.findViewById(R.id.citySpinner);
         addCityText = (TextView) v.findViewById(R.id.add_city);
@@ -93,6 +105,9 @@ public class ProfileFragment extends Fragment {
         vibrate_switch = (Switch) v.findViewById(R.id.vibrate_switch);
         karmaText = (TextView) v.findViewById(R.id.karmaText);
         cityContent = (LinearLayout) v.findViewById(R.id.cityContent);
+        loginButton = (Button) v.findViewById(R.id.loginButton);
+        deleteButton = (Button) v.findViewById(R.id.deleteButton);
+
         // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
         notificationPrivateContent = (LinearLayout) v.findViewById(R.id.notificationPrivateContent);
         notificationCompanyContent = (LinearLayout) v.findViewById(R.id.notificationCompanyContent);
@@ -105,7 +120,7 @@ public class ProfileFragment extends Fragment {
         addCityText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewCityDialogFragment dialog = new NewCityDialogFragment();
+                AddCityDialogFragment dialog = new AddCityDialogFragment();
                 dialog.show(getFragmentManager(), "Lisää kaupunki");
             }
         });
@@ -120,24 +135,36 @@ public class ProfileFragment extends Fragment {
             spinnerArrayAdapter.notifyDataSetChanged();
             citySpinner.setAdapter(spinnerArrayAdapter);
 
-            citySpinner.setSelection(cityNames.indexOf(AppRes.getCity()));
+            citySpinner.post(new Runnable() {
+                @Override
+                public void run() {
+                    citySpinner.setSelection(cityNames.indexOf(AppRes.getCity()));
+                }
+            });
         }
 
         // Asetetaan syntymäaika
-        Calendar birthday = Calendar.getInstance();
+        final Calendar birthday = Calendar.getInstance();
         birthday.setTimeInMillis(AppRes.getUser().birthday);
-        birthdayPicker.setDate(birthday);
+        birthdayPicker.post(new Runnable() {
+            @Override
+            public void run() {
+                birthdayPicker.setDate(birthday);
+            }
+        });
 
         if (AppRes.getUser().isMale()) {
-            maleRadioButton.setChecked(true);
-        } else femaleRadioButton.setChecked(true);
+            setViewChecked(maleRadioButton, true);
+        } else setViewChecked(femaleRadioButton, true);
 
-        private_switch.setChecked(PrefRes.getBoolean(PRIVATE_NOTIFICATIONS));
-        replies_switch.setChecked(PrefRes.getBoolean(REPLY_NOTIFICATIONS));
-        comments_switch.setChecked(PrefRes.getBoolean(COMMENT_NOTIFICATIONS));
-        events_switch.setChecked(PrefRes.getBoolean(EVENT_NOTIFICATIONS));
-        company_switch.setChecked(PrefRes.getBoolean(COMPANY_NOTIFICATIONS));
-        vibrate_switch.setChecked(PrefRes.getBoolean(VIBRATE_NOTIFICATIONS));
+        setViewChecked(private_switch, PrefRes.getBoolean(PRIVATE_NOTIFICATIONS));
+        setViewChecked(replies_switch, PrefRes.getBoolean(REPLY_NOTIFICATIONS));
+        setViewChecked(comments_switch, PrefRes.getBoolean(COMMENT_NOTIFICATIONS));
+        setViewChecked(events_switch, PrefRes.getBoolean(EVENT_NOTIFICATIONS));
+        setViewChecked(company_switch, PrefRes.getBoolean(COMPANY_NOTIFICATIONS));
+        setViewChecked(vibrate_switch, PrefRes.getBoolean(VIBRATE_NOTIFICATIONS));
+
+        setLoginButton();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,11 +173,106 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // TODO Käyttäjän poistoa ei käytetä
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ConfirmationDialogFragment confirm_dialog = ConfirmationDialogFragment.newInstance(AppRes.getContext().getString(R.string.profile_delete_confirmation));
+                confirm_dialog.show(getFragmentManager(), "poista profiili dialogi");
+                confirm_dialog.setListener(new ConfirmationDialogFragment.ConfirmationDialogCloseListener() {
+                    @Override
+                    public void onDialogYesButtonClick() {
+                        UsersResource.getInstance().removeUser(AppRes.getUser().userId, new EditSuccessListener() {
+                            @Override
+                            public void onEditSuccess() {
+                                FirebaseAuthService.getInstance().deleteAccount(new FirebaseAuthService.DeleteAccountHandler() {
+                                    @Override
+                                    public void onDeleteAccountSuccess() {
+                                        LoginManager.getInstance().logOut();
+                                        PrefRes.clearPref();
+                                        Activity activity = getActivity();
+                                        Intent i = activity.getBaseContext().getPackageManager().getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
+                                        if (i != null) {
+                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        }
+                                        startActivity(i);
+                                        activity.finish();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Fragment avattu")
                 .putContentType(this.getClass().getSimpleName()));
 
         return v;
+    }
+
+    private void setViewChecked(final View view, final boolean checked) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                if (view instanceof Switch) {
+                    Switch switchView = (Switch) view;
+                    switchView.setChecked(checked);
+                } else if (view instanceof RadioButton) {
+                    RadioButton radioButton = (RadioButton) view;
+                    radioButton.setChecked(checked);
+                }
+            }
+        });
+    }
+
+    private void setLoginButton() {
+        if (FbRes.isUserLoggedIn()) {
+            loginButton.setText(getString(R.string.facebook_logout));
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    final FirebaseUser user = mAuth.getCurrentUser();
+                    ConfirmationDialogFragment confirm_dialog = ConfirmationDialogFragment.newInstance(AppRes.getContext().getString(R.string.profile_logout_confirmation));
+                    confirm_dialog.show(getFragmentManager(), "kirjaudu ulos dialogi");
+                    confirm_dialog.setListener(new ConfirmationDialogFragment.ConfirmationDialogCloseListener() {
+                        @Override
+                        public void onDialogYesButtonClick() {
+                            LoginManager.getInstance().logOut();
+                            FirebaseAuthService.getInstance().unlinkFacebook(new FirebaseAuthService.UnlinkFacebookHandler() {
+                                @Override
+                                public void onUnlinkFacebookSuccess() {
+                                    setLoginButton();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            loginButton.setText(getString(R.string.facebook_login));
+            FacebookService.getInstance().setLogInListener(getActivity(), loginButton, new FacebookLoginHandler() {
+                @Override
+                public void onLoginSuccess(String gender, String birthday) {
+                    FirebaseAuthService.getInstance().linkFacebookIfNeeded(new FirebaseAuthService.LinkFacebookIfNeededHandler() {
+                        @Override
+                        public void onLinkFacebookIfNeededSuccess() {
+                            setLoginButton();
+                            FragmentListeners.getInstance().getPageAdapterRefreshListener().refreshMainActivity();
+                        }
+                    });
+                }
+
+                @Override
+                public void onLoginFailed() {
+                    setLoginButton();
+                }
+            });
+
+        }
     }
 
     private void saveUser() {

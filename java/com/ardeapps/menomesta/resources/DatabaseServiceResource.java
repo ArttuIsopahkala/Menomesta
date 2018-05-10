@@ -14,9 +14,8 @@ import com.ardeapps.menomesta.objects.BarRequest;
 import com.ardeapps.menomesta.objects.CityRequest;
 import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.CompanyMessage;
-import com.ardeapps.menomesta.objects.Event;
 import com.ardeapps.menomesta.objects.Session;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 
 import static com.ardeapps.menomesta.PrefRes.CITY;
 import static com.ardeapps.menomesta.PrefRes.LAST_COMMENT_ID;
-import static com.ardeapps.menomesta.PrefRes.LAST_EVENT_ID;
 import static com.ardeapps.menomesta.PrefRes.LAST_NOTIFICATION;
 import static com.ardeapps.menomesta.PrefRes.LAST_SESSION_ID;
 import static com.ardeapps.menomesta.PrefRes.LAST_USER_LOOKING_FOR_USER_ID;
@@ -35,13 +33,13 @@ import static com.ardeapps.menomesta.PrefRes.LAST_USER_LOOKING_FOR_USER_ID;
  * NotificationService varten, joten käytetään prefs
  */
 
-public class ServiceResource extends FirebaseService {
-    private static ServiceResource instance;
+public class DatabaseServiceResource extends FirebaseDatabaseService {
+    private static DatabaseServiceResource instance;
     private static DatabaseReference database;
 
-    public static ServiceResource getInstance() {
+    public static DatabaseServiceResource getInstance() {
         if (instance == null) {
-            instance = new ServiceResource();
+            instance = new DatabaseServiceResource();
         }
         database = getDatabase();
         return instance;
@@ -65,7 +63,8 @@ public class ServiceResource extends FirebaseService {
     }
 
     public void isNewEvents(final NewEventHandler handler) {
-        setChildAddListener(database.child(CITIES).child(PrefRes.getString(CITY)).child(EVENTS).limitToLast(1), new GetDataSuccessListener() {
+        // TODO toteuta tämä tulevaisuudessa
+        /*setChildAddListener(database.child(CITIES).child(PrefRes.getString(CITY)).child(EVENTS).limitToLast(1), new GetDataSuccessListener() {
             @Override
             public void onGetDataSuccess(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);
@@ -78,7 +77,7 @@ public class ServiceResource extends FirebaseService {
                     PrefRes.putString(LAST_EVENT_ID, event.eventId);
                 }
             }
-        });
+        });*/
     }
 
     public void isNewNotifications(final NewNotificationHandler handler) {
@@ -126,7 +125,7 @@ public class ServiceResource extends FirebaseService {
                 CompanyMessage companyMessage = dataSnapshot.getValue(CompanyMessage.class);
                 if (companyMessage != null) {
                     String lastUserLookingForUserId = PrefRes.getString(LAST_USER_LOOKING_FOR_USER_ID);
-                    // Eka kertaa tyhjä. commentId = userId
+                    // Eka kertaa tyhjä. reviewId = userId
                     if (!companyMessage.commentId.equals(PrefRes.getUser().userId) && !lastUserLookingForUserId.equals(companyMessage.commentId)) {
                         handler.onNewUserLookingForCompany(companyMessage);
                     }

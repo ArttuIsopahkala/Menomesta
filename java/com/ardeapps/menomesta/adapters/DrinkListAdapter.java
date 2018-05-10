@@ -64,7 +64,7 @@ public class DrinkListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final DrinkHolder holder = new DrinkHolder();
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.drink_list_item, null);
+            convertView = inflater.inflate(R.layout.list_item_drink, null);
         }
         holder.nameText = (TextView) convertView.findViewById(R.id.name);
         holder.sizeText = (TextView) convertView.findViewById(R.id.size);

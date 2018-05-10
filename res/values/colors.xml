@@ -20,4 +20,6 @@
     <item name="color_money" type="color">#4a9c2a</item>
     <item name="color_marker" type="color">#DF3636</item>
     <item name="color_company_circle" type="color">#ef180b</item>
+    <item name="color_bar_open" type="color">#10a10d</item>
+    <item name="color_bar_closed" type="color">#d62727</item>
 </resources>

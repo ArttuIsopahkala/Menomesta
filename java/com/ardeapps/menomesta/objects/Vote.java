@@ -16,4 +16,11 @@ public class Vote {
     public Vote() {
         // Default constructor required for calls to DataSnapshot.getValue(Vote.class)
     }
+
+    public Vote(EventVote eventVote) {
+        this.voteId = eventVote.voteId;
+        this.barId = eventVote.barId;
+        this.userId = eventVote.userId;
+        this.time = eventVote.time;
+    }
 }

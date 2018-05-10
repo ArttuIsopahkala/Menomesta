@@ -20,7 +20,7 @@ import com.ardeapps.menomesta.objects.BarRequest;
 import com.ardeapps.menomesta.objects.CityRequest;
 import com.ardeapps.menomesta.objects.Comment;
 import com.ardeapps.menomesta.objects.Event;
-import com.ardeapps.menomesta.resources.ServiceResource;
+import com.ardeapps.menomesta.resources.DatabaseServiceResource;
 import com.ardeapps.menomesta.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -75,21 +75,21 @@ public class NotificationService extends Service {
         userCommentIds = new ArrayList<>(PrefRes.getStringSet(USER_COMMENT_IDS));
 
         if (!StringUtils.isEmptyString(PrefRes.getUser().userId) && !StringUtils.isEmptyString(PrefRes.getString(CITY))) {
-            ServiceResource.getInstance().isBarRequestHandled(new BarRequestHandledHandler() {
+            DatabaseServiceResource.getInstance().isBarRequestHandled(new BarRequestHandledHandler() {
                 @Override
                 public void onBarRequestHandled(BarRequest barRequest) {
                     showNotification(getString(R.string.request1bar) + " " + barRequest.name + " " + getString(R.string.request2), 4, "");
                 }
             });
 
-            ServiceResource.getInstance().isCityRequestHandled(new CityRequestHandledHandler() {
+            DatabaseServiceResource.getInstance().isCityRequestHandled(new CityRequestHandledHandler() {
                 @Override
                 public void onCityRequestHandled(CityRequest cityRequest) {
                     showNotification(getString(R.string.request1city) + " " + cityRequest.city + " " + getString(R.string.request2), 5, "");
                 }
             });
 
-            ServiceResource.getInstance().isNewNotifications(new NewNotificationHandler() {
+            DatabaseServiceResource.getInstance().isNewNotifications(new NewNotificationHandler() {
                 @Override
                 public void onNewNotification(String message) {
                     showNotification(message, 7, message);
@@ -97,7 +97,7 @@ public class NotificationService extends Service {
             });
 
             if (replyNotifications) {
-                ServiceResource.getInstance().isNewReplies(userCommentIds, new NewReplyHandler() {
+                DatabaseServiceResource.getInstance().isNewReplies(userCommentIds, new NewReplyHandler() {
                     @Override
                     public void onNewPrivateMessage(String userCommentId, Comment reply) {
                         showNotification(getString(R.string.new_reply), 1, userCommentId);
@@ -106,7 +106,7 @@ public class NotificationService extends Service {
             }
 
             if (commentNotifications) {
-                ServiceResource.getInstance().isNewComments(new NewCommentHandler() {
+                DatabaseServiceResource.getInstance().isNewComments(new NewCommentHandler() {
                     @Override
                     public void onNewComment(Comment comment) {
                         showNotification(getString(R.string.new_message), 3, "");
@@ -115,7 +115,7 @@ public class NotificationService extends Service {
             }
 
             if (eventNotifications) {
-                ServiceResource.getInstance().isNewEvents(new NewEventHandler() {
+                DatabaseServiceResource.getInstance().isNewEvents(new NewEventHandler() {
                     @Override
                     public void onNewEvent(Event event) {
                         showNotification(getString(R.string.new_event), 8, "");
@@ -125,7 +125,7 @@ public class NotificationService extends Service {
 
             // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
             /*if (privateNotifications) {
-                ServiceResource.getInstance().isNewPrivateMessages(sessionIds, new NewPrivateMessageHandler() {
+                DatabaseServiceResource.getInstance().isNewPrivateMessages(sessionIds, new NewPrivateMessageHandler() {
                     @Override
                     public void onNewPrivateMessage(final String sessionId, final Comment privateMessage) {
                         UsersResource.getInstance().getUser(privateMessage.userId, new GetUserHandler() {
@@ -147,7 +147,7 @@ public class NotificationService extends Service {
 
             // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
             /*if (privateNotifications) {
-                ServiceResource.getInstance().isNewSessions(new NewSessionHandler() {
+                DatabaseServiceResource.getInstance().isNewSessions(new NewSessionHandler() {
                     @Override
                     public void onNewSession(Session session) {
                         String title = getString(R.string.new_private_message) + " ";
@@ -162,7 +162,7 @@ public class NotificationService extends Service {
 
             // TODO Seuranhaku-toimintoa ei ole vielä toteutettu
             /*if (companyNotifications) {
-                ServiceResource.getInstance().isNewUsersLookingForCompany(new NewUserLookingForCompanyHandler() {
+                DatabaseServiceResource.getInstance().isNewUsersLookingForCompany(new NewUserLookingForCompanyHandler() {
                     @Override
                     public void onNewUserLookingForCompany(CompanyMessage companyMessage) {
                         showNotification(getString(R.string.notification_new_company), 9, "");

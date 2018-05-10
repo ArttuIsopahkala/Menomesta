@@ -38,6 +38,12 @@ public class InfoFragment extends Fragment {
     static final long oneDayInMilliseconds = 86400000;
     static final long oneMinuteInMilliseconds = 60000;
 
+    private int fanCount = 0;
+
+    public void setFanCount(int fanCount) {
+        this.fanCount = fanCount;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class InfoFragment extends Fragment {
         TextView rateTextView = (TextView) v.findViewById(R.id.rate);
         TextView moreTextView = (TextView) v.findViewById(R.id.more);
         TextView facebookText = (TextView) v.findViewById(R.id.facebook);
+        TextView fanCountText = (TextView) v.findViewById(R.id.fanCountText);
         TextView titleText = (TextView) v.findViewById(R.id.title);
         final EditText feedback_text = (EditText) v.findViewById(R.id.feedback_text);
         Button feedback_button = (Button) v.findViewById(R.id.feedback_button);
@@ -56,10 +63,11 @@ public class InfoFragment extends Fragment {
         RelativeLayout adsOffContainer = (RelativeLayout) v.findViewById(R.id.adsOffContainer);
         adsOffContainer.setVisibility(View.GONE);
 
+        fanCountText.setText(getString(R.string.info_fan_count, String.valueOf(fanCount)));
         feedback_text.setHorizontallyScrolling(false);
         feedback_text.setMaxLines(5);
         titleText.setText(getString(R.string.info_title));
-        versionTextView.setText(versionTextView.getText().toString() + " " + BuildConfig.VERSION_NAME);
+        versionTextView.setText(getString(R.string.info_version, BuildConfig.VERSION_NAME));
         rateTextView.setText(Html.fromHtml("<u>" + getString(R.string.info_link_rate) + "</u>"));
         rateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +79,7 @@ public class InfoFragment extends Fragment {
                     PrefRes.putLong(RATE_TIME, currentTime);
                 }
 
-                openUrl("http://play.google.com/store/apps/details?id=com.ardeapps.menomesta");
+                openUrl(getString(R.string.app_google_play_link));
             }
         });
 
@@ -79,7 +87,7 @@ public class InfoFragment extends Fragment {
         moreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openUrl("http://play.google.com/store/apps/developer?id=Arde+Apps");
+                openUrl(getString(R.string.app_developer_link));
             }
         });
 
@@ -93,7 +101,7 @@ public class InfoFragment extends Fragment {
                     UsersResource.getInstance().updateUserKarma(KarmaPoints.FACEBOOK_LIKED, true);
                     PrefRes.putLong(LIKE_TIME, currentTime);
                 }
-                openUrl("https://www.facebook.com/menomesta");
+                openUrl(getString(R.string.app_facebook_link));
             }
         });
 

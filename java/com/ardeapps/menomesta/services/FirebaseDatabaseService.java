@@ -7,19 +7,22 @@ import android.support.annotation.NonNull;
 
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.BuildConfig;
+import com.ardeapps.menomesta.FbRes;
 import com.ardeapps.menomesta.PrefRes;
 import com.ardeapps.menomesta.R;
 import com.ardeapps.menomesta.handlers.AddSuccessListener;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
-import com.ardeapps.menomesta.handlers.FirebaseAuthHandler;
+import com.ardeapps.menomesta.handlers.FirebaseLoginHandler;
 import com.ardeapps.menomesta.utils.Logger;
 import com.ardeapps.menomesta.views.Loader;
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -38,24 +41,25 @@ import static com.ardeapps.menomesta.PrefRes.TOKEN;
 /**
  * Created by Arttu on 4.5.2017.
  */
-public class FirebaseService {
+public class FirebaseDatabaseService {
     public static final int messageLimit = 20;
     public static final int barCommentLimit = 100;
     protected static final String APP_DATA = "appData";
     protected static final String BAR_REQUESTS = "barRequests";
-    protected static final String CITIES = "cities";
     protected static final String CITY_NAMES = "cityNames";
-    protected static final String CITY_REQUESTS = "cityRequests";
     protected static final String PRIVATE_MESSAGES = "privateMessages";
     protected static final String PRIVATE_SESSIONS = "privateSessions";
+    protected static final String CITY_REQUESTS = "cityRequests";
     protected static final String USERS = "users";
+    protected static final String CITIES = "cities";
     protected static final String FEED_BACKS = "feedBacks";
     protected static final String NOTIFICATIONS = "notifications";
+
     protected static final String KARMA_POINTS = "karmaPoints";
     protected static final String REPORT_COUNTS = "reportCounts";
     protected static final String BARS = "bars";
-    protected static final String EVENTS = "events";
-    protected static final String BAR_COMMENTS = "barComments";
+    protected static final String BAR_COMMENTS = "barComments"; // Vanhentunut
+    protected static final String REVIEWS = "reviews";
     protected static final String DRINKS = "drinks";
     protected static final String BAR_DETAILS = "barDetails";
     protected static final String COMMENTS = "comments";
@@ -63,6 +67,7 @@ public class FirebaseService {
     protected static final String USERS_LOOKING_FOR_COMPANY = "usersLookingForCompany";
     protected static final String RATINGS = "ratings";
     protected static final String VOTES = "votes";
+    protected static final String EVENT_VOTES = "eventVotes";
     protected static final String VOTE_STATS = "voteStats";
     protected static final String RATING_STATS = "ratingStats";
     protected static final String VOTES_LOG = "votesLog";
@@ -72,6 +77,8 @@ public class FirebaseService {
     protected static final String KARMA = "karma";
     private static final String DEBUG = "DEBUG";
     private static final String RELEASE = "RELEASE";
+
+    private static final String FACEBOOK = "facebook.com";
 
     protected static DatabaseReference getDatabase() {
         if (BuildConfig.DEBUG) {
@@ -95,29 +102,11 @@ public class FirebaseService {
         Logger.toast(R.string.error_database);
     }
 
-    private static void onUserNotFoundError() {
-        if (Loader.isVisible()) {
-            Loader.hide();
-        }
-        Logger.toast(R.string.error_profile);
-    }
-
-    protected static void onDataNotFoundError() {
-        Logger.toast(R.string.error_data_not_found);
-    }
-
     private static void logAction() {
         String callingClass = Thread.currentThread().getStackTrace()[4].getFileName();
         int lineNumber = Thread.currentThread().getStackTrace()[4].getLineNumber();
         String callingMethod = Thread.currentThread().getStackTrace()[4].getMethodName();
         Logger.log(callingClass + ":" + lineNumber + " - " + callingMethod);
-    }
-
-    private static void logLocalAction() {
-        int lineNumber = Thread.currentThread().getStackTrace()[3].getLineNumber();
-        String callingMethod = Thread.currentThread().getStackTrace()[3].getMethodName();
-        Logger.log(FirebaseService.class.getSimpleName() + ":" + lineNumber + " - " + callingMethod);
-
     }
 
     private static boolean isNetworkAvailable() {
@@ -127,113 +116,6 @@ public class FirebaseService {
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         }
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public static void logInToFirebase(final FirebaseAuthHandler handler) {
-        logLocalAction();
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithCustomToken(PrefRes.getString(TOKEN)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    final FirebaseUser user = mAuth.getCurrentUser();
-                    if (user != null) {
-                        Logger.log(AppRes.getContext().getString(R.string.log_login_success_token_valid, user.getUid()));
-                        handler.onFirebaseAuthSuccess(user.getUid());
-                    } else {
-                        onUserNotFoundError();
-                    }
-                } else {
-                    // Token expired
-                    mAuth.signInWithEmailAndPassword(PrefRes.getString(EMAIL), PrefRes.getString(PASSWORD)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                final FirebaseUser user = mAuth.getCurrentUser();
-                                if (user != null) {
-                                    user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                            if (task.isSuccessful()) {
-                                                Logger.log(AppRes.getContext().getString(R.string.log_login_success_token_created, user.getUid()));
-                                                // Tallennetaan token, jota käytetään uudelleen kirjautumisessa
-                                                String token = task.getResult().getToken();
-                                                PrefRes.putString(TOKEN, token);
-                                                Loader.hide();
-                                                handler.onFirebaseAuthSuccess(user.getUid());
-                                            } else {
-                                                onUserNotFoundError();
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    onUserNotFoundError();
-                                }
-                            } else {
-                                onDatabaseError();
-                            }
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    public static void registerToFirebase(final FirebaseAuthHandler handler) {
-        logLocalAction();
-        if (isNetworkAvailable()) {
-            Loader.show();
-            final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            // Sing in anonymous to get token and userId
-            mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        final FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Tallennetaan token, jota käytetään uudelleen kirjautumisessa
-                                        String token = task.getResult().getToken();
-                                        PrefRes.putString(TOKEN, token);
-
-                                        final String email = user.getUid() + "@menomesta.fi";
-                                        final String password = user.getUid();
-                                        // Tallennetaan email ja password, jota käytetään uudelleen kirjautumisessa
-                                        PrefRes.putString(EMAIL, email);
-                                        PrefRes.putString(PASSWORD, password);
-                                        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-                                        user.linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                Loader.hide();
-                                                if (task.isSuccessful()) {
-                                                    Logger.log(AppRes.getContext().getString(R.string.log_register_success, email, password));
-                                                    handler.onFirebaseAuthSuccess(user.getUid());
-                                                } else {
-                                                    PrefRes.putString(TOKEN, "");
-                                                    PrefRes.putString(EMAIL, "");
-                                                    PrefRes.putString(PASSWORD, "");
-                                                    onDatabaseError();
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        onUserNotFoundError();
-                                    }
-                                }
-                            });
-                        } else {
-                            onUserNotFoundError();
-                        }
-                    } else {
-                        onDatabaseError();
-                    }
-                }
-            });
-        } else onNetworkError();
     }
 
     /**

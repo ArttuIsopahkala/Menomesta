@@ -4,7 +4,7 @@ import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.handlers.EditSuccessListener;
 import com.ardeapps.menomesta.handlers.GetBarDetailsHandler;
 import com.ardeapps.menomesta.objects.BarDetails;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseReference;
  * Created by Arttu on 19.1.2018.
  */
 
-public class BarDetailsResource extends FirebaseService {
+public class BarDetailsResource extends FirebaseDatabaseService {
     private static BarDetailsResource instance;
     private static DatabaseReference database;
 

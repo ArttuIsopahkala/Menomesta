@@ -65,13 +65,13 @@ public class ReplyListAdapter extends BaseAdapter {
     public View getView(final int position, View cv, ViewGroup parent) {
         final CommentHolder holder = new CommentHolder();
         if (cv == null) {
-            cv = inflater.inflate(R.layout.comment_list_item, null);
+            cv = inflater.inflate(R.layout.list_item_comment, null);
         }
         holder.commentContainer = (LinearLayout) cv.findViewById(R.id.commentContainer);
         holder.replyContainer = (LinearLayout) cv.findViewById(R.id.replyContainer);
         holder.likesText = (TextView) cv.findViewById(R.id.likesText);
-        holder.like_icon = (IconView) cv.findViewById(R.id.like_icon);
-        holder.report_icon = (LinearLayout) cv.findViewById(R.id.report_icon);
+        holder.like_icon = (IconView) cv.findViewById(R.id.likeIcon);
+        holder.report_icon = (LinearLayout) cv.findViewById(R.id.reportIcon);
         holder.comment = (TextView) cv.findViewById(R.id.comment);
         holder.time = (TextView) cv.findViewById(R.id.time);
         holder.replies = (TextView) cv.findViewById(R.id.replies);

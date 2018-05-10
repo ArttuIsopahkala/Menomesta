@@ -3,7 +3,7 @@ package com.ardeapps.menomesta.resources;
 import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.handlers.GetVotesHandler;
 import com.ardeapps.menomesta.objects.Vote;
-import com.ardeapps.menomesta.services.FirebaseService;
+import com.ardeapps.menomesta.services.FirebaseDatabaseService;
 import com.ardeapps.menomesta.utils.DateUtil;
 import com.ardeapps.menomesta.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by Arttu on 19.1.2018.
  */
 
-public class VotesLogResource extends FirebaseService {
+public class VotesLogResource extends FirebaseDatabaseService {
     private static VotesLogResource instance;
     private static DatabaseReference database;
 
