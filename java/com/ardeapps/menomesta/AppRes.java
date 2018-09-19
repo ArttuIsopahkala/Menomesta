@@ -30,6 +30,7 @@ import static com.ardeapps.menomesta.PrefRes.CITY;
  */
 public class AppRes extends Application {
 
+    public static String PRIVACY_POLICY_LINK;
     private static Context mContext;
     private static User myUser;
     private static String myCity;

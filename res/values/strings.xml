@@ -155,6 +155,7 @@
     <string name="info_link_more">Lisää sovelluksia</string>
     <string name="info_link_rate">Arvostele sovellus</string>
     <string name="info_link_like">Tykkää Facebookissa</string>
+    <string name="info_link_privacy">Tietosuojakäytäntö</string>
     <string name="info_fan_count">%1$s käyttäjää tykkää tästä</string>
     <string name="info_premium_now">Olet nyt premium! Käynnistä sovellus uudelleen niin mainos häviää.</string>
     <string name="info_feedback_content">Lähetä palautetta alla olevalla viestillä. Voit antaa palautetta sovelluksen toimivuudesta, haluamistasi uusista ominaisuuksista tai löydetyistä bugeista. Kirjoita perään sähköpostiosoitteesi, jos haluat vastauksen.</string>

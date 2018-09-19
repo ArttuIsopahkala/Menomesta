@@ -524,13 +524,16 @@ public class MainActivity extends FragmentActivity implements IsUsersLookingForC
 
             @Override
             public void goToInfoFragment() {
-                FacebookService.getInstance().getFanCount(new GetFanCountHandler() {
+                infoFragment.setFanCount(86);
+                switchToFragment(infoFragment);
+                // TODO uncomment lines below when manage_pages permission is accepted from Facebook. Remove lines above.
+                /*FacebookService.getInstance().getFanCount(new GetFanCountHandler() {
                     @Override
                     public void onGetFanCountSuccess(int fanCount) {
                         infoFragment.setFanCount(fanCount);
                         switchToFragment(infoFragment);
                     }
-                });
+                });*/
             }
 
             @Override

@@ -53,6 +53,7 @@ public class InfoFragment extends Fragment {
         TextView rateTextView = (TextView) v.findViewById(R.id.rate);
         TextView moreTextView = (TextView) v.findViewById(R.id.more);
         TextView facebookText = (TextView) v.findViewById(R.id.facebook);
+        TextView privacyPolicyText = (TextView) v.findViewById(R.id.privacyPolicy);
         TextView fanCountText = (TextView) v.findViewById(R.id.fanCountText);
         TextView titleText = (TextView) v.findViewById(R.id.title);
         final EditText feedback_text = (EditText) v.findViewById(R.id.feedback_text);
@@ -102,6 +103,14 @@ public class InfoFragment extends Fragment {
                     PrefRes.putLong(LIKE_TIME, currentTime);
                 }
                 openUrl(getString(R.string.app_facebook_link));
+            }
+        });
+
+        privacyPolicyText.setText(Html.fromHtml("<u>" + getString(R.string.info_link_privacy) + "</u>"));
+        privacyPolicyText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUrl(AppRes.PRIVACY_POLICY_LINK);
             }
         });
 

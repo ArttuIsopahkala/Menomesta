@@ -1,5 +1,6 @@
 package com.ardeapps.menomesta.resources;
 
+import com.ardeapps.menomesta.AppRes;
 import com.ardeapps.menomesta.handlers.GetAppDataHandler;
 import com.ardeapps.menomesta.objects.KarmaPoints;
 import com.ardeapps.menomesta.objects.ReportCounts;
@@ -58,6 +59,8 @@ public class AppDataResource extends FirebaseDatabaseService {
 
                 String facebookAppToken = (String) dataSnapshot.child("FACEBOOK_APP_TOKEN").getValue();
                 String currentAppVersion = (String) dataSnapshot.child("CURRENT_APP_VERSION").getValue();
+                AppRes.PRIVACY_POLICY_LINK = (String) dataSnapshot.child("PRIVACY_POLICY_LINK").getValue();
+
                 handler.onAppDataLoaded(facebookAppToken, currentAppVersion);
             }
         });
